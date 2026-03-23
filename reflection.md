@@ -1,6 +1,6 @@
 # HW4 Reflection
 ## MIRA - Mock Interview and Response Analyzer
-**Likhith Reddy Rechintala**
+**Likhith Reddy Rechintala, Jaya Sriharshita Koneti**
 
 > Session logs referenced in this document are in `claude-conversations/`:
 > - `claude-rules-file-init-and-iterate.txt` - Part 1: CLAUDE.md setup and `/init`
