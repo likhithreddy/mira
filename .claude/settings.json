@@ -1,0 +1,29 @@
+{
+  "defaultMode": "default",
+  "permissions": {
+    "allow": [
+      "Bash(yarn dev)",
+      "Bash(yarn build)",
+      "Bash(yarn test *)",
+      "Bash(yarn lint)",
+      "Bash(yarn format)",
+      "Bash(yarn type-check)",
+      "Bash(yarn vitest *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git pull)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ],
+    "ask": [
+      "Bash(yarn *)"
+    ],
+    "deny": [
+      "Bash(git push *)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)"
+    ]
+  }
+}

@@ -1,0 +1,1791 @@
+╭─── Claude Code v2.1.81 ──────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting        │
+│             Welcome back Likhith Reddy!            │ started                 │
+│                                                    │ ✔ Run /init to create … │
+│                      ▗ ▗   ▖ ▖                     │ ─────────────────────── │
+│                                                    │ Recent activity         │
+│                        ▘▘ ▝▝                       │ No recent activity      │
+│   Sonnet 4.6 · Claude Enterprise · Northeastern    │                         │
+│   University                                       │                         │
+│    ~/…/Projects/cs7180-vibecoding/projects/mira    │                         │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+  ✻ Voice mode is now available · /voice to enable
+
+❯ /clear                                                                        
+  ⎿  (no content)
+
+❯ /init                                                                         
+
+⏺ Explore(Explore codebase structure)
+  ⎿  Done (18 tool uses · 55.4k tokens · 2m 31s)
+  (ctrl+o to expand)
+
+⏺ Write(CLAUDE.md)
+  ⎿  Wrote 110 lines to CLAUDE.md
+     # CLAUDE.md
+
+     This file provides guidance to Claude Code (claude.ai/code) when
+     working with code in this repository.
+
+     ## Project Overview
+
+     **MIRA** (Mock Interview and Response Analyzer) is an AI-powered mock
+     interview platform. Users provide a resume + job description, MIRA
+     generates personalized questions via Gemini/Groq, captures spoken
+     answers via Web Speech API, and delivers structured feedback reports.
+
+     Full requirements are in `project-memory/PRD.md` and sprint details in
+     `project-memory/SPRINT_PLAN.md`. The codebase follows an **AI-TDD 
+     workflow**: tests are written before implementation.
+
+
+     … +100 lines (ctrl+o to expand)
+
+⏺ Created CLAUDE.md with:
+
+  - Project overview — what MIRA is and how it works
+  - Tech stack — all key dependencies
+  - Commands — build, test, lint, and how to run a single test
+  - Architecture — route groups, session state machine, AI gateway internals,
+  API route table, database schema relationships, browser API constraints
+  - Testing requirements — coverage thresholds, property-based testing modules,
+  mutation score targets
+  - Sprint structure — pointer to the sprint plan format
+
+✻ Brewed for 2m 5s
+
+❯ One more important thing. Let us use yarn as package manager instead of npm.  
+Change it wherever needed in our application.                                   
+
+⏺ Explore(Find all npm references in repo)
+  ⎿  Done (4 tool uses · 25.8k tokens · 8s)
+  (ctrl+o to expand)
+
+⏺ Updated plan
+  ⎿  /plan to preview
+
+⏺ User approved Claude's plan
+  ⎿  Plan saved to: ~/.claude/plans/nifty-cuddling-sky.md · /plan to edit
+     Plan: Switch Package Manager from npm to yarn
+
+     Context
+
+     The project is still in the planning/scaffolding phase — no source code
+     exists yet, only documentation. The user wants all references to npm
+     replaced with yarn equivalents before development begins, so the toolchain
+     is consistent from the start.
+
+     Files to Modify
+
+     1. CLAUDE.md
+
+     Replace all npm run <script> with yarn <script> (yarn doesn't require the
+     run keyword for package.json scripts). Also replace the npx vitest
+     single-test example with yarn vitest.
+
+     ┌────────────────────────┬─────────────────────────┐
+     │          Old           │           New           │
+     ├────────────────────────┼─────────────────────────┤
+     │ npm run dev            │ yarn dev                │
+     ├────────────────────────┼─────────────────────────┤
+     │ npm run build          │ yarn build              │
+     ├────────────────────────┼─────────────────────────┤
+     │ npm run type-check     │ yarn type-check         │
+     ├────────────────────────┼─────────────────────────┤
+     │ npm run lint           │ yarn lint               │
+     ├────────────────────────┼─────────────────────────┤
+     │ npm run format         │ yarn format             │
+     ├────────────────────────┼─────────────────────────┤
+     │ npm run format:check   │ yarn format:check       │
+     ├────────────────────────┼─────────────────────────┤
+     │ npm run test           │ yarn test               │
+     ├────────────────────────┼─────────────────────────┤
+     │ npm run test:e2e       │ yarn test:e2e           │
+     ├────────────────────────┼─────────────────────────┤
+     │ npx vitest run src/... │ yarn vitest run src/... │
+     └────────────────────────┴─────────────────────────┘
+
+     2. project-memory/SPRINT_PLAN.md
+
+     Lines 103–108 contain acceptance criteria using npm run commands — replace
+     with yarn equivalents.
+     Line 157 has npm audit --audit-level=high in the CI pipeline definition —
+     replace with yarn npm audit --audit-level=high (Yarn Berry syntax) or yarn 
+     audit --level high (Yarn Classic syntax). Since no Yarn version is pinned
+     yet, use yarn audit --groups dependencies --level high as the
+     Classic-compatible form.
+
+     3. project-memory/PRD.md
+
+     Lines 518, 533, 534, 1822 reference npm audit in security requirements and
+     CI/CD diagrams — replace with yarn audit --level high.
+
+     Notes
+
+     - No lock files exist yet, so there's nothing to migrate.
+     - When package.json is created (Sprint 1 / S1-01), the packageManager field
+      should be set to specify the yarn version (e.g., "packageManager": 
+     "yarn@1.22.x" for Classic or "yarn@4.x.x" for Berry).
+     - The .yarnrc.yml (Berry) or no config file (Classic) will be created
+     naturally during S1-01 scaffolding — no action needed now.
+
+     Verification
+
+     After edits:
+     1. Grep for npm across all files — should return zero matches (or only
+     matches inside quoted prose that is explicitly referring to the npm
+     registry, not the CLI).
+     2. Confirm all yarn commands in CLAUDE.md are syntactically correct for
+     yarn.
+
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(CLAUDE.md)
+  ⎿  Added 9 lines, removed 9 lines
+      21  ## Commands                                                    
+      22                                                                 
+      23  ```bash                                                        
+      24 -npm run dev           # Next.js dev server                     
+      25 -npm run build         # Production build                       
+      26 -npm run type-check    # TypeScript strict check                
+      27 -npm run lint          # ESLint                                 
+      28 -npm run format        # Prettier auto-format                   
+      29 -npm run format:check  # Prettier check (CI)                    
+      30 -npm run test                                                   
+         -# Vitest unit tests (80% coverage threshold)                   
+      31 -npm run test:e2e      # Playwright (Chromium + WebKit)         
+      24 +yarn dev              # Next.js dev server                     
+      25 +yarn build            # Production build                       
+      26 +yarn type-check       # TypeScript strict check                
+      27 +yarn lint             # ESLint                                 
+      28 +yarn format           # Prettier auto-format                   
+      29 +yarn format:check     # Prettier check (CI)                    
+      30 +yarn test                                                      
+         +# Vitest unit tests (80% coverage threshold)                   
+      31 +yarn test:e2e         # Playwright (Chromium + WebKit)         
+      32  ```                                                            
+      33                                                                 
+      34  Run a single test file:                                        
+      35  ```bash                                                        
+      36 -npx vitest run src/path/to/file.test.ts                        
+      36 +yarn vitest run src/path/to/file.test.ts                       
+      37  ```                                                            
+      38                                                                 
+      39  ## Architecture                                                
+
+⏺ Now update the SPRINT_PLAN.md references:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(project-memory/SPRINT_PLAN.md)
+  ⎿  Added 6 lines, removed 6 lines
+      100  - `stryker.config.ts` scoped to 5 modules: `scoring.ts`,      
+           `tokenCounter.ts`, `questionDedup.ts`, `sessionStore.ts`,     
+           `silenceDetector.ts`                                          
+      101                                                                
+      102  **Test cases:**                                               
+      103 -- `npm run dev` starts without errors from a clean clone with 
+          -`.env.local` populated                                        
+      104 -- `npm run                                                    
+          -build` produces a successful production build with zero       
+          -TypeScript errors                                             
+      105 -- `npm run lint` exits 0 with zero errors or warnings         
+      106 -- `npm run format:check` exits 0 (no formatting diffs)        
+      107 -- `npm run                                                    
+          -test` runs Vitest and exits 0 (no test files yet; runner must 
+          -not error on empty suite)                                     
+      108 -- `npm run                                                    
+          -test:e2e` runs Playwright and exits 0 (no spec files yet)     
+      103 +- `yarn dev` starts without errors from a clean clone with    
+          +`.env.local` populated                                        
+      104 +- `yarn                                                       
+          +build` produces a successful production build with zero       
+          +TypeScript errors                                             
+      105 +- `yarn lint` exits 0 with zero errors or warnings            
+      106 +- `yarn format:check` exits 0 (no formatting diffs)           
+      107 +- `yarn                                                       
+          +test` runs Vitest and exits 0 (no test files yet; runner must 
+          +not error on empty suite)                                     
+      108 +- `yarn                                                       
+          +test:e2e` runs Playwright and exits 0 (no spec files yet)     
+      109                                                                
+      110  **Property-based tests:** N/A — tooling setup, no logic.      
+      111                                                                
+
+⏺ Update(project-memory/SPRINT_PLAN.md)
+  ⎿  Added 1 line, removed 1 line
+      154  **Functional acceptance criteria:**                           
+      155  - `.github/workflows/pr.yml` triggers on `pull_request`       
+           targeting `main`                                              
+      156  - **Stage 1** (parallel jobs): `type-check` (`tsc --noEmit`)  
+           and `next-build` (`next build`) — Stage 2+ blocked if either  
+           fails                                                         
+      157 -- **Stage 2** (parallel, blocked on Stage 1): `lint-check`    
+          -(ESLint), `format-check` (Prettier --check),                  
+          -`dependency-audit` (`npm audit --audit-level=                 
+          -high`), `secrets-scan`                                        
+          -(`trufflesecurity/trufflehog-actions-scan`), `codeql-analysis`
+          - (GitHub CodeQL for TypeScript — fails on Critical or High    
+          -findings; results in GitHub Security tab)                     
+      157 +- **Stage 2** (parallel, blocked on Stage 1): `lint-check`    
+          +(ESLint), `format-check` (Prettier --check),                  
+          +`dependency-audit` (`yarn audit --level                       
+          +high`), `secrets-scan`                                        
+          +(`trufflesecurity/trufflehog-actions-scan`), `codeql-analysis`
+          + (GitHub CodeQL for TypeScript — fails on Critical or High    
+          +findings; results in GitHub Security tab)                     
+      158  - **Stage 3** (blocked on Stage 2): `vitest --coverage`;      
+           fails if any coverage metric < 80%; lcov uploaded to Codecov; 
+            Codecov posts PR comment with coverage delta                 
+      159  - **Stage 4** (blocked on Stage 3): `playwright` on Chromium  
+           + WebKit; test Supabase project env vars from GitHub Secrets; 
+            uploads test report and failure screenshots as artifacts     
+      160  - **Stage 5**: `stryker` — runs only on weekly `schedule:     
+           cron` trigger, NOT on PRs; fails if mutation score < 60%;     
+           uploads HTML report as artifact                               
+
+⏺ Now update PRD.md:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(project-memory/PRD.md)
+  ⎿  Added 1 line, removed 1 line
+      515  | NF-S3 | User passwords shall never be stored or handled by  
+           the application layer — authentication is fully delegated to  
+           Supabase Auth. |                                              
+      516  | NF-S4 | All HTTP communication shall be over HTTPS. Vercel  
+           enforces this by default. |                                   
+      517  | NF-S5 | All secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`,   
+           `SUPABASE_SERVICE_ROLE_KEY`, `PGCRYPTO_SECRET`) shall be      
+           stored as Vercel environment variables and never committed to 
+            the repository. A `.env.example` file documents required     
+           variable names with no values. |                              
+      518 -| NF-S6 | Dependency vulnerabilities shall be scanned on every
+          - PR via `npm audit --audit-level=                             
+          -high`. Any high or critical severity vulnerability shall block
+          - the PR from merging. |                                       
+      518 +| NF-S6 | Dependency vulnerabilities shall be scanned on every
+          + PR via `yarn audit --level                                   
+          +high`. Any high or critical severity vulnerability shall block
+          + the PR from merging. |                                       
+      519  | NF-S7 | Static application security testing (SAST) shall be 
+            performed on every PR via GitHub CodeQL analysis. Any        
+           Critical or High severity finding shall block the PR. Results 
+            shall be visible in the GitHub Security tab. |               
+      520  | NF-S8 | AI provider API keys stored in the database shall   
+           be encrypted at rest using the Supabase `pgcrypto` extension. 
+            Keys are decrypted only within the gateway module at call    
+           time. Decrypted key values shall never be returned in any API 
+            response, never logged, and never cached in plaintext. |     
+      521  | NF-S9 | Secrets scanning shall be added to the CI pipeline  
+           using `trufflesecurity/trufflehog-actions-scan`. Any          
+           committed secret detected shall immediately fail the pipeline 
+            and block the PR. |                                          
+
+⏺ Update(project-memory/PRD.md)
+  ⎿  Added 2 lines, removed 2 lines
+      530  | A02 — Cryptographic Failures | AI provider keys encrypted   
+           at rest with pgcrypto. HTTPS enforced on all traffic by       
+           Vercel. Supabase Auth uses bcrypt for password hashing. No    
+           sensitive data transmitted over unencrypted channels. |       
+      531  | A03 — Injection | All Supabase queries use the typed        
+           Supabase JS client which parameterises all inputs. No raw SQL 
+            strings are constructed from user input anywhere in the      
+           codebase. Gemini prompts include user text but are sent as    
+           structured JSON fields, not interpolated into raw query       
+           strings. |                                                    
+      532  | A04 — Insecure Design | RLS-first architecture: access      
+           control is at the data layer, not only the application layer. 
+            Admin privacy boundary is a hard RLS constraint, not a       
+           UI-only check. API gateway never exposes provider keys in     
+           responses. |                                                  
+      533 -| A05 — Security Misconfiguration | CodeQL SAST on every PR. `
+          -npm                                                           
+          - audit` on every PR. `trufflesec/trufflehog` secrets scanning 
+          -on every PR. No default credentials. Supabase service role key
+          - is server-side only — never in any `NEXT_PUBLIC_` variable. |
+      534 -| A06 — Vulnerable and Outdated Components | `npm audit --    
+          -audit-level=                                                  
+          -high` blocks PRs on high/critical CVEs. Dependabot or Renovate
+          - may be added in v2 for automated dependency updates. |       
+      533 +| A05 — Security Misconfiguration | CodeQL SAST on every PR. `
+          +yarn                                                          
+          + audit` on every PR. `trufflesec/trufflehog` secrets scanning 
+          +on every PR. No default credentials. Supabase service role key
+          + is server-side only — never in any `NEXT_PUBLIC_` variable. |
+      534 +| A06 — Vulnerable and Outdated Components | `yarn audit --   
+          +level                                                         
+          +high` blocks PRs on high/critical CVEs. Dependabot or Renovate
+          + may be added in v2 for automated dependency updates. |       
+      535  | A07 — Identification and Authentication Failures |          
+           Authentication fully delegated to Supabase Auth               
+           (battle-tested). Session tokens are httpOnly SSR cookies      
+           managed by `@supabase/ssr`. No custom authentication logic.   
+           Password validation enforced client-side and by Supabase.     
+           Google OAuth via Supabase. |                                  
+      536  | A08 — Software and Data Integrity Failures | GitHub branch  
+           protection requires PR reviews and all CI checks to pass      
+           before merge. No direct pushes to `main`. Production deploys  
+           only on merge to `main`. |                                    
+      537  | A09 — Security Logging and Monitoring Failures | Sentry     
+           captures all application errors with stack traces. AI gateway 
+            logs all calls to `ai_call_logs` table (provider, latency,   
+           status — no key values). Better Stack monitors uptime with    
+           alerting to team email. |                                     
+
+⏺ Update(project-memory/PRD.md)
+  ⎿  Added 1 line, removed 1 line
+      1819  Stage 2: Code Quality (parallel jobs)                        
+      1820    ├── lint-check        → ESLint (next/core-web-vitals +     
+            TypeScript + jsx-a11y)                                       
+      1821    ├── format-check      → Prettier --check (fails on any     
+            formatting diff)                                             
+      1822 -  ├── dependency-audit  → npm audit --audit-level=           
+           -high (dependency vulnerability scan)                         
+      1822 +  ├── dependency-audit  → yarn audit --level                 
+           +high (dependency vulnerability scan)                         
+      1823    ├── secrets-scan      →                                    
+            trufflesecurity/trufflehog-actions-scan                      
+      1824    │                        Scans all commits in the PR for   
+            committed secrets, API keys,                                 
+      1825    │                        credentials, and tokens. Fails on 
+             any detected secret.                                        
+⏺ Now verify no npm references remain:
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Zero npm references remain. All three files have been updated:
+
+  - CLAUDE.md — all npm run commands → yarn, npx vitest → yarn vitest
+  - SPRINT_PLAN.md — acceptance criteria commands + CI npm audit → yarn audit 
+  --level high
+  - PRD.md — NF-S6, A05, A06, and the CI diagram line all updated to yarn audit 
+  --level high
+
+✻ Sautéed for 1m 27s
+
+❯ Project Overview                                                              
+                                                                                
+This is MIRA — Mock Interview and Response Analyzer, an AI-powered interview    
+simulation platform                                                             
+Users upload a resume + job description, complete a spoken mock interview, and  
+receive a structured performance report                                         
+Deadline: April 19, 2026. Four sprints from March 22 – April 17                 
+@import docs/PRD.md — the PRD is the single source of truth for all             
+requirements; always reference section and requirement IDs (e.g. F1.1, NF-S2)   
+in commits and comments                                                         
+                                                                                
+                                                                                
+Tech Stack (Strict — Do Not Substitute)                                         
+                                                                                
+Framework: Next.js 14+ App Router, TypeScript strict mode                       
+Styling: Tailwind CSS + ShadCN/UI (use ShadCN primitives wherever a match       
+exists — never build a button/input/dialog from scratch)                        
+Animations: Framer Motion — all page transitions, component mounts, interactive 
+ state changes                                                                  
+AI: Google Gemini Pro and Groq — exclusively via the AI gateway module in       
+Next.js API routes, never called directly from the client                       
+Auth: Supabase Auth (@supabase/ssr) — email+password and Google OAuth           
+Database: Supabase (PostgreSQL) — RLS enabled on every table, pgcrypto for API  
+key encryption                                                                  
+File Storage: Supabase Storage — private resumes bucket, user-scoped paths      
+State Management: Zustand — session state, conversation history, UI state       
+Client Cache: sessionStorage — cache question set to survive page refresh       
+during session                                                                  
+Speech: Web Speech API (recognition) + SpeechSynthesis API (TTS) —              
+browser-native, Chromium only for full functionality                            
+PDF: pdf.js (client-side resume parsing), jsPDF (client-side report generation) 
+Forms/Validation: react-hook-form + zod — all form inputs, all API response     
+validation                                                                      
+Icons: lucide-react only — never use emojis anywhere in the UI                  
+Error Tracking: Sentry (@sentry/nextjs)                                         
+Hosting: Vercel only                                                            
+                                                                                
+                                                                                
+Folder Structure (Strict — Never Deviate)                                       
+                                                                                
+Map all new code to the exact directory tree in PRD Section 9 before creating   
+any file                                                                        
+app/ — pages and layouts only, no business logic                                
+components/ui/ — ShadCN auto-generated primitives, do not edit these files      
+components/auth/, components/setup/, components/session/, components/report/,   
+components/admin/, components/dashboard/, components/profile/,                  
+components/shared/ — feature-specific and shared components                     
+lib/gateway/ — AI gateway: router, adapters (gemini.ts, groq.ts), prompts,      
+logger                                                                          
+lib/supabase/ — all Supabase DB query functions; never write raw queries in     
+components or pages                                                             
+lib/speech/ — TTS and speech recognition abstractions                           
+lib/pdf/ — resume parsing and report PDF generation                             
+lib/ — pure business                                                            
+… +78 lines …                                                                   
+ia vi.mock('lib/gateway'), Supabase via custom factory, Web Speech API +        
+SpeechSynthesis via vi.stubGlobal                                               
+                                                                                
+                                                                                
+Pre-Commit Checklist (Run Before Every Commit)                                  
+bashyarn lint              # Zero ESLint errors or warnings                     
+yarn format            # Prettier compliance                                    
+yarn test --coverage   # Unit + property tests, 80%+ coverage                   
+yarn test:integration  # Integration tests                                      
+yarn test:e2e          # Playwright E2E flows                                   
+                                                                                
+Branching, Commits, and PR Rules                                                
+                                                                                
+Never commit directly to main                                                   
+Branch naming: feature/<issue-number>-<short-description>,                      
+bug/<issue-number>-<description>, chore/<issue-number>-<description>            
+Commit format: [#<issue-number>] <type>: <description> — e.g. [#12] feat:       
+implement session rating screen                                                 
+Every PR must link its issue with Closes #<number> for auto-close on merge      
+PRs are blocked unless: all CI checks pass, 80% coverage maintained,            
+ESLint/Prettier pass, CodeQL SAST and npm audit pass                            
+TODOs in code: // ISSUE-#<number>: <description>                                
+Migration timing: migrations are applied via Supabase MCP only at PR-raise      
+time, after all commits are complete and all tests pass — never earlier         
+                                                                                
+                                                                                
+Design Rules                                                                    
+                                                                                
+Typography: DM Serif Display for headings, Figtree for body text                
+Colors: professional and clean — avoid jarring colors, match the                
+interview/professional context of the product                                   
+Never use emojis — lucide-react icons only, always                              
+Animations: Framer Motion, ease-out, 200–400ms for UI transitions, 400–600ms    
+for page transitions, fade + y: 10 → 0 for route changes                        
+Always respect prefers-reduced-motion via Framer Motion's useReducedMotion hook 
+ — set duration: 0 when enabled                                                 
+Loading states: ShadCN Skeleton components with shimmer — never spinner-only    
+for content areas                                                               
+Forms: no focus rings (focus-visible:ring-0), inline field-level error messages 
+ only — no top-of-form banners                                                  
+No blank white flash between route transitions — use AnimatePresence at the     
+layout level                                                                    
+Full responsiveness: 320px mobile through 1536px+ desktop — no fixed pixel      
+widths on containers                                                            
+                                                                                
+                                                                                
+AI Assistant Behavior Rules                                                     
+                                                                                
+Never hallucinate architecture decisions — halt and ask if context is missing   
+Implement only what the current issue explicitly requests — never prematurely   
+build future features                                                           
+Push back if a requested change violates these rules, breaks RLS, exposes a key 
+ to the client, or contradicts the PRD                                          
+All implementation decisions must be traceable to a PRD requirement ID          
+                                                                                
+Review all of this information and if it doesn't exists in @CLAUDE.md , add     
+them and be precise on what you are talking                                     
+  ⎿  Read CLAUDE.md (111 lines)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ I have the current CLAUDE.md. Let me now diff it against the user's rules to
+  identify every gap before writing the plan.
+
+⏺ Updated plan
+  ⎿  /plan to preview
+
+⏺ User approved Claude's plan
+  ⎿  Plan saved to: ~/.claude/plans/nifty-cuddling-sky.md · /plan to edit
+     Plan: Update CLAUDE.md with missing project rules
+
+     Context
+
+     The user provided a comprehensive set of project rules covering tech stack
+     constraints, folder structure, database migration conventions, naming
+     rules, the Explore→Plan→Implement→Commit workflow, AI gateway rules,
+     security rules, TDD strategy, branching/commit conventions, and design
+     rules. The current CLAUDE.md captures only ~30% of this. The task is to add
+      every missing rule, grouped into clear sections, without duplicating
+     anything already present.
+
+     File to Modify
+
+     CLAUDE.md
+
+     Gap Analysis — What's Missing
+
+     Tech Stack additions
+
+     - ShadCN: use primitives wherever a match exists — never build
+     button/input/dialog from scratch
+     - Client Cache: sessionStorage caches question set to survive page refresh
+     during /session
+     - Forms: react-hook-form + zod for all form inputs AND all API response
+     validation
+     - Icons: lucide-react only — never use emojis in the UI
+     - Framer Motion scope: all page transitions, component mounts, interactive
+     state changes
+
+     New section: Folder Structure (Strict)
+
+     - app/ — pages and layouts only, no business logic
+     - components/ui/ — ShadCN auto-generated, never edit these files
+     - Feature component dirs: components/auth/, setup/, session/, report/,
+     admin/, dashboard/, profile/, shared/
+     - lib/gateway/ — router, adapters (gemini.ts, groq.ts), prompts, logger
+     - lib/supabase/ — all DB query functions; never write raw queries in
+     components or pages
+     - lib/speech/ — TTS and speech recognition abstractions
+     - lib/pdf/ — resume parsing and report PDF generation
+     - lib/ — pure business logic: scoring.ts, tokenCounter.ts,
+     questionDedup.ts, silenceDetector.ts
+     - store/ — Zustand stores only
+     - types/ — global TypeScript types and Zod schemas
+     - supabase/migrations/ — every DB schema change must be a .sql file here
+
+     New section: Database Migration Rules
+
+     - All schema changes go in supabase/migrations/ as raw SQL
+     - Naming: <issue-number>_<short-description>.sql (no timestamp prefix)
+     - One migration file per issue; never spread across multiple files for the
+     same issue
+     - Never edit migration files belonging to other issues
+     - Migrations applied via Supabase MCP only at PR-raise time (after all
+     commits + tests pass)
+     - Never apply changes via Supabase Studio without a migration file first
+
+     New section: Naming Conventions
+
+     - Files/directories: kebab-case
+     - React components: PascalCase
+     - Zero tolerance: no any, no unused imports, no ESLint warnings, no
+     Prettier violations at any commit
+
+     New section: Explore → Plan → Implement → Commit Workflow
+
+     - Required for features touching 3+ files, or involving auth/permissions/DB
+      schema/AI gateway
+     - Phase 1 Explore: use Glob/Grep/Read, save to
+     docs/explorations/<issue-number>-exploration.md, run /clear
+     - Phase 2 Plan: enter Plan mode, read exploration + PRD sections, save to
+     docs/plans/<issue-number>-plan.md, run /clear
+     - Phase 3 Implement: TDD — failing tests first → commit → implement →
+     commit → refactor → commit; never deviate from plan without updating plan
+     file
+     - Phase 4 Commit: commit at each checkpoint; raise PR then apply migration
+     via Supabase MCP
+
+     New section: PostToolUse Hook
+
+     - Hook auto-runs Prettier after every Edit/Write tool call — no need to run
+      yarn format manually
+     - yarn format:check still runs as final CI gate
+
+     Session State Machine additions
+
+     - SessionShell.tsx is the orchestrator — never put state logic in the page
+     file
+     - State names: loading (witty phrases), mic-permission, countdown, chat
+     (active interview), rating, closing-note, report-wait, complete
+
+     AI Gateway additions
+
+     - Retry logic: exponential backoff, max 3 retries, for 429 and 503 errors
+     - Token management: estimate tokens (1 token ≈ 4 chars); if ≥ 12,000
+     tokens, call /api/summarize-context before any other gateway call
+
+     New section: Security Rules
+
+     - RLS on every table — users can only read/write their own rows
+     - Admin routes/tables require role = admin checked at both middleware AND
+     RLS layer
+     - SUPABASE_SERVICE_ROLE_KEY and all AI provider keys: server-side only,
+     never in NEXT_PUBLIC_ vars
+     - All AI calls proxied through gateway — no provider SDK called from client
+     - All DB queries via typed Supabase JS client — no raw SQL strings built
+     from user input
+     - Double auth: middleware checks session at edge; route handler re-verifies
+      with supabase.auth.getUser()
+     - TruffleHog secrets scanning blocks any PR with a committed secret
+
+     Testing additions
+
+     - TDD order: write failing test → commit → implement minimum to pass →
+     commit → refactor → commit
+     - Never change tests to match a broken implementation — fix the code
+     - Never delete existing test cases
+     - Correct 5 property-based modules: scoring.ts, tokenCounter.ts,
+     questionDedup.ts, silenceDetector.ts, sessionStore.ts
+     - Mocking: gateway via vi.mock('lib/gateway'), Supabase via custom factory,
+      Web Speech API + SpeechSynthesis via vi.stubGlobal
+     - Add yarn test:integration to pre-commit checklist
+
+     New section: Branching, Commits & PRs
+
+     - Never commit directly to main
+     - Branch naming: feature/<issue-number>-<short-description>, bug/...,
+     chore/...
+     - Commit format: [#<issue-number>] <type>: <description>
+     - Every PR links issue with Closes #<number>
+     - TODOs: // ISSUE-#<number>: <description>
+     - Migration timing: apply via Supabase MCP only at PR-raise time, after all
+      commits and tests pass
+
+     New section: Design Rules
+
+     - Typography: DM Serif Display (headings), Figtree (body)
+     - No emojis anywhere — lucide-react icons only
+     - Framer Motion: ease-out, 200–400ms for UI transitions, 400–600ms for page
+      transitions, fade + y: 10 → 0 for route changes
+     - Always respect prefers-reduced-motion via useReducedMotion — set
+     duration: 0 when enabled
+     - Loading states: ShadCN Skeleton with shimmer — never spinner-only for
+     content areas
+     - Forms: no focus rings (focus-visible:ring-0), inline field-level error
+     messages only
+     - No blank white flash between routes — use AnimatePresence at the layout
+     level
+     - Full responsiveness: 320px mobile through 1536px+ desktop — no fixed
+     pixel widths on containers
+
+     New section: AI Behavior Rules
+
+     - Never hallucinate architecture decisions — halt and ask if context is
+     missing
+     - Implement only what the current issue explicitly requests — never
+     prematurely build future features
+     - Push back if a change violates these rules, breaks RLS, exposes a key to
+     the client, or contradicts the PRD
+     - All implementation decisions must be traceable to a PRD requirement ID
+
+     Verification
+
+     After editing CLAUDE.md:
+     1. Re-read the full file and cross-check every bullet in the Gap Analysis
+     above is present
+     2. Grep for any remaining mentions of npm (should be zero)
+     3. Confirm no content already in CLAUDE.md is duplicated
+
+
+
+
+
+
+
+
+⏺ Now I'll rewrite CLAUDE.md with all missing sections added.
+
+⏺ Write(CLAUDE.md)
+  ⎿  Added 152 lines, removed 32 lines
+       6                                                                 
+       7  **MIRA** (Mock Interview and Response Analyzer) is an          
+          AI-powered mock interview platform. Users provide a resume +   
+          job description, MIRA generates personalized questions via     
+          Gemini/Groq, captures spoken answers via Web Speech API, and   
+          delivers structured feedback reports.                          
+       8                                                                 
+       9 -Full requirements are in `project-memory/PRD.md` and sprint    
+         -details in `project-memory/SPRINT_PLAN.md`. The codebase       
+         -follows an **AI-TDD workflow**: tests are written before       
+         -implementation.                                                
+       9 +Deadline: April 19, 2026. Four sprints from March 22 – April   
+         +17.                                                            
+      10                                                                 
+      11 -## Tech Stack                                                  
+      11 +Full requirements are in `project-memory/PRD.md` (single       
+         +source of truth). Always reference PRD section and requirement 
+         + IDs (e.g. F1.1, NF-S2) in commits and comments. Sprint        
+         +details are in `project-memory/SPRINT_PLAN.md`. The codebase   
+         +follows an **AI-TDD workflow**: tests are written before       
+         +implementation.                                                
+      12                                                                 
+      13 -- **Framework:** Next.js 14 (App Router) + TypeScript (strict  
+         -mode)                                                          
+      14 -- **Styling:** Tailwind CSS + ShadCN/UI + Framer Motion        
+      15 -- **State:** Zustand (session state, conversation history, UI  
+         -phases)                                                        
+      16 -- **Auth + DB:** Supabase (Auth, Postgres with RLS, Storage)   
+      17 -- **AI:** Google Gemini Pro + Groq via a custom                
+         -provider-agnostic gateway                                      
+      13 +## Tech Stack (Strict — Do Not Substitute)                     
+      14 +                                                               
+      15 +- **Framework:** Next.js 14+ App Router + TypeScript strict    
+         +mode                                                           
+      16 +- **Styling:** Tailwind CSS + ShadCN/UI — use ShadCN           
+         +primitives wherever a match exists; never build a button,      
+         +input, or dialog from scratch                                  
+      17 +- **Animations:** Framer Motion — all page transitions,        
+         +component mounts, and interactive state changes                
+      18 +- **State:** Zustand — session state, conversation history, UI 
+         + state                                                         
+      19 +- **Client Cache:** sessionStorage — caches the question set   
+         +to survive page refresh during `/session`                      
+      20 +- **Auth + DB:** Supabase Auth (`@supabase/ssr`) —             
+         +email+password and Google OAuth; Supabase PostgreSQL with RLS  
+         +on every table; pgcrypto for API key encryption                
+      21 +- **File Storage:** Supabase Storage — private `resumes`       
+         +bucket, user-scoped paths                                      
+      22 +- **AI:** Google Gemini Pro + Groq — exclusively via the AI    
+         +gateway in Next.js API routes; never called directly from the  
+         +client                                                         
+      23 +- **Speech:** Web Speech API (recognition) + SpeechSynthesis   
+         +API (TTS) — Chromium only for full functionality               
+      24 +- **PDF:** pdf.js (client-side resume parsing), jsPDF          
+         +(client-side report generation)                                
+      25 +- **Forms/Validation:** react-hook-form + zod — all form       
+         +inputs and all API response validation                         
+      26 +- **Icons:** lucide-react only — never use emojis anywhere in  
+         +the UI                                                         
+      27 +- **Error Tracking:** Sentry (`@sentry/nextjs`)                
+      28  - **Testing:** Vitest + React Testing Library (unit),          
+          fast-check (property-based), Playwright (E2E), Stryker         
+          (mutation)                                                     
+      29 -- **Infra:** Vercel, Sentry, Better Stack uptime monitoring    
+      29 +- **Hosting:** Vercel only                                     
+      30                                                                 
+      31  ## Commands                                                    
+      32                                                                 
+     ...
+      28  yarn format           # Prettier auto-format                   
+      29  yarn format:check     # Prettier check (CI)                    
+      30  yarn test             # Vitest unit tests (80% coverage        
+          threshold)                                                     
+      31 +yarn test:integration # Integration tests                      
+      32  yarn test:e2e         # Playwright (Chromium + WebKit)         
+      33  ```                                                            
+      34                                                                 
+     ...
+       36  yarn vitest run src/path/to/file.test.ts                      
+       37  ```                                                           
+       38                                                                
+       39 +Pre-commit checklist — run all of these before every commit:  
+       40 +```bash                                                       
+       41 +yarn lint                                                     
+       42 +yarn format                                                   
+       43 +yarn test --coverage                                          
+       44 +yarn test:integration                                         
+       45 +yarn test:e2e                                                 
+       46 +```                                                           
+       47 +                                                              
+       48 +## Folder Structure (Strict — Never Deviate)                  
+       49 +                                                              
+       50 +Map all new code to the exact directory tree in PRD Section 9 
+          + before creating any file.                                    
+       51 +                                                              
+       52 +```                                                           
+       53 +app/                        # Pages and layouts only — no     
+          +business logic                                                
+       54 +components/                                                   
+       55 +  ui/                       # ShadCN auto-generated           
+          +primitives — never edit these files                           
+       56 +  auth/                     # Auth feature components         
+       57 +  setup/                    # Setup wizard components         
+       58 +  session/                  # Interview session components    
+       59 +  report/                   # Report page components          
+       60 +  admin/                    # Admin panel components          
+       61 +  dashboard/                # Dashboard components            
+       62 +  profile/                  # Profile page components         
+       63 +  shared/                   # Shared/reusable components      
+       64 +lib/                                                          
+       65 +  gateway/                  # AI gateway: router, adapters    
+          +(gemini.ts, groq.ts), prompts, logger                         
+       66 +  supabase/                 # All Supabase DB query functions 
+          + — never write raw queries in components or pages             
+       67 +  speech/                   # TTS and speech recognition      
+          +abstractions                                                  
+       68 +  pdf/                      # Resume parsing and report PDF   
+          +generation                                                    
+       69 +  scoring.ts                # Pure business logic modules     
+       70 +  tokenCounter.ts                                             
+       71 +  questionDedup.ts                                            
+       72 +  silenceDetector.ts                                          
+       73 +store/                      # Zustand stores only             
+       74 +types/                      # Global TypeScript types and Zod 
+          + schemas                                                      
+       75 +supabase/                                                     
+       76 +  migrations/               # Every DB schema change must be  
+          +a .sql file here — never via Supabase Studio UI               
+       77 +```                                                           
+       78 +                                                              
+       79 +## Database Migration Rules                                   
+       80 +                                                              
+       81 +- Every schema change, RLS policy, or seed data change must   
+          +be a raw SQL file in `supabase/migrations/`                   
+       82 +- Naming convention: `<issue-number>_<short-description>.sql` 
+          + — no timestamp prefix (e.g. `39_create_profiles_table.sql`)  
+       83 +- Each issue gets exactly one migration file; all schema      
+          +changes for that issue go into that single file — never       
+          +spread across multiple files for the same issue               
+       84 +- Never touch migration files from other issues — if working  
+          +on issue #42, only `42_<description>.sql` may be created or   
+          +edited                                                        
+       85 +- Migrations are applied via the Supabase MCP tool only at    
+          +PR-raise time, after all commits are complete and all tests   
+          +pass — never earlier                                          
+       86 +- Never apply changes directly via Supabase Studio without a  
+          +migration file first                                          
+       87 +                                                              
+       88 +## Naming Conventions                                         
+       89 +                                                              
+       90 +- Files and directories: kebab-case (e.g.                     
+          +`rating-screen.tsx`, `token-counter.ts`)                      
+       91 +- React components: PascalCase (e.g. `RatingScreen`,          
+          +`SessionShell`)                                               
+       92 +- Zero tolerance: no TypeScript `any`, no unused imports, no  
+          +ESLint warnings, no Prettier violations at any commit         
+       93 +                                                              
+       94 +## Explore → Plan → Implement → Commit Workflow               
+       95 +                                                              
+       96 +Required for any feature touching 3 or more files, or         
+          +involving auth, permissions, DB schema, or the AI gateway.    
+       97 +                                                              
+       98 +**Phase 1 — Explore:** Use Glob, Grep, and Read to understand 
+          + all affected existing code. Save findings to                 
+          +`docs/explorations/<issue-number>-exploration.md`. Run        
+          +`/clear` after saving.                                        
+       99 +                                                              
+      100 +**Phase 2 — Plan:** Enter Plan mode. Read the saved           
+          +exploration file and the relevant PRD sections. Design the    
+          +full approach — files to create/edit, migration needed, tests 
+          + to write first. Save the complete plan to                    
+          +`docs/plans/<issue-number>-plan.md`. Run `/clear` after       
+          +saving.                                                       
+      101 +                                                              
+      102 +**Phase 3 — Implement:** Read the saved plan file. Follow TDD 
+          + — write failing tests first → commit → implement minimum     
+          +code to pass → commit → refactor → commit. Never deviate from 
+          + the saved plan without updating the plan file first.         
+      103 +                                                              
+      104 +**Phase 4 — Commit:** Commit at each meaningful checkpoint.   
+          +Once all commits are done and tests pass, raise the PR, then  
+          +apply the migration via Supabase MCP.                         
+      105 +                                                              
+      106 +## PostToolUse Hook                                           
+      107 +                                                              
+      108 +A PostToolUse hook is configured on the Edit and Write tools. 
+          + After every file edit or write, Prettier runs automatically  
+          +on that file — never run `yarn format` manually after         
+          +individual edits. The `yarn format:check` CI gate still runs  
+          +as a final catch.                                             
+      109 +                                                              
+      110  ## Architecture                                               
+      111                                                                
+      112  ### Route Groups & Protection                                 
+     ...
+      49                                                                 
+      50  ### Session State Machine                                      
+      51                                                                 
+      52 -The `/session` page is driven by a Zustand store with 7 phases:
+      53 -`idle → loading → mic_permission → countdown → active → rating 
+         - → closing_note → report_wait → complete`                      
+      52 +The `/session` page is driven by a Zustand store with 8 states:
+      53 +`loading (witty phrases) → mic-permission → countdown → chat   
+         +(active interview) → rating → closing-note → report-wait →     
+         +complete`                                                      
+      54                                                                 
+      55 -Phase transitions control which sub-component renders (e.g.,   
+         -`WittyPhrasesScreen`, `MicButton`, `RatingScreen`).            
+      55 +`SessionShell.tsx` is the state machine orchestrator — it      
+         +renders the correct state component. Never put state logic in  
+         +the page file.                                                 
+      56                                                                 
+      57  ### AI Gateway (`lib/gateway/`)                                
+      58                                                                 
+      59 -All AI calls go through a provider-agnostic gateway:           
+      60 -1. **Router** — selects active provider from `ai_providers`    
+         -table, rotates keys from `ai_provider_keys` pool (round-robin) 
+      61 -2. **Adapter** — formats request per provider (Gemini or Groq  
+         -), normalizes response                                         
+      62 -3. **Logger** — writes call metadata (latency, tokens, errors) 
+         -to `ai_call_logs`                                              
+      63 -4. **Fallback** — retries with next provider if primary fails  
+      59 +All AI calls go through `lib/gateway/index.ts` —               
+         +`gatewayCall(callType, prompt, options)`:                      
+      60 +1. **Router** — selects active provider from `ai_providers`    
+         +table, rotates keys round-robin from `ai_provider_keys` pool   
+      61 +2. **Adapter** — formats request per provider (gemini.ts /     
+         +groq.ts), normalizes response                                  
+      62 +3. **Logger** — writes call metadata (latency, tokens, errors) 
+         +to `ai_call_logs`; never logs decrypted key values             
+      63 +4. **Retry** — exponential backoff, max 3 retries, on 429 and  
+         +503 errors                                                     
+      64 +5. **Token management** — estimate tokens before every call (1 
+         + token ≈ 4 chars); if ≥ 12,000 tokens, call                    
+         +`/api/summarize-context` first                                 
+      65                                                                 
+      66 -Call entry point: `gatewayCall('generate-questions' |          
+         -'generate-followup' | 'summarize-context' | 'generate-report', 
+         - prompt, options)`                                             
+      67 -                                                               
+      66  ### Key API Routes                                             
+      67                                                                 
+      68  | Route | Purpose |                                            
+     ...
+       85                                                                
+       86  ### Browser APIs                                              
+       87                                                                
+       88 -- **Speech recognition:** Web Speech API — Chromium only      
+          - (affects browser support scope)                              
+       88 +- **Speech recognition:** Web Speech API — Chromium only      
+       89  - **TTS:** `SpeechSynthesis` API — reads questions            
+           word-by-word                                                  
+       90  - **PDF parsing:** pdf.js (client-side resume extraction)     
+       91  - **PDF export:** jsPDF (client-side report download)         
+       92                                                                
+       93 -## Testing Requirements                                       
+       93 +## Security Rules (Non-Negotiable)                            
+       94                                                                
+       95 -- Unit test coverage: **80% threshold** enforced by Vitest    
+       96 -- Property-based tests with `fast-check` for 5 pure logic     
+          -modules (question generator, token counter, silence detector, 
+          - score aggregator, context summarizer)                        
+       97 -- Mutation score target: **70%+** via Stryker on those 5      
+          -modules                                                       
+       98 -- E2E tests cover critical user flows in Chromium and WebKit  
+       95 +- RLS enabled on every Supabase table — users can only        
+          +read/write their own rows                                     
+       96 +- Admin routes and tables require `role = admin` checked at   
+          +both middleware AND RLS layer                                 
+       97 +- `SUPABASE_SERVICE_ROLE_KEY` and all AI provider keys:       
+          +server-side API routes only — never in any `NEXT_PUBLIC_`     
+          +variable                                                      
+       98 +- All AI calls proxied through the gateway — no provider SDK  
+          +called from the client                                        
+       99 +- All DB queries via the typed Supabase JS client — no raw    
+          +SQL strings built from user input                             
+      100 +- Double auth verification: middleware checks session at      
+          +edge; route handler re-verifies with                          
+          +`supabase.auth.getUser()` as defense-in-depth                 
+      101 +- TruffleHog secrets scanning blocks any PR that contains a   
+          +committed secret                                              
+      102                                                                
+      103 +## Testing Strategy (TDD — Strictly Enforced)                 
+      104 +                                                              
+      105 +- **TDD order:** write failing test → commit → implement      
+          +minimum code to pass → commit → refactor → commit             
+      106 +- Tests are never changed to match a broken implementation —  
+          +fix the code                                                  
+      107 +- Never delete existing test cases                            
+      108 +- Unit + property tests: Vitest + React Testing Library;      
+          +files end in `.test.ts` / `.test.tsx`                         
+      109 +- Property-based tests with fast-check on 5 pure logic        
+          +modules: `scoring.ts`, `tokenCounter.ts`, `questionDedup.ts`, 
+          + `silenceDetector.ts`, `sessionStore.ts`                      
+      110 +- E2E tests: Playwright in `tests/e2e/`, Chromium primary +   
+          +WebKit                                                        
+      111 +- Mutation testing: Stryker on the 5 modules above, weekly CI 
+          + schedule, 70%+ mutation score target                         
+      112 +- Coverage threshold: 80% minimum (branches, functions,       
+          +lines, statements) — PRs blocked if below                     
+      113 +- **Mocking:** gateway via `vi.mock('lib/gateway')`, Supabase 
+          + via custom factory, Web Speech API + SpeechSynthesis via     
+          +`vi.stubGlobal`                                               
+      114 +                                                              
+      115 +## Branching, Commits & PRs                                   
+      116 +                                                              
+      117 +- Never commit directly to `main`                             
+      118 +- Branch naming:                                              
+          +`feature/<issue-number>-<short-description>`,                 
+          +`bug/<issue-number>-<description>`,                           
+          +`chore/<issue-number>-<description>`                          
+      119 +- Commit format: `[#<issue-number>] <type>: <description>` —  
+          +e.g. `[#12] feat: implement session rating screen`            
+      120 +- Every PR must link its issue with `Closes #<number>` for    
+          +auto-close on merge                                           
+      121 +- TODOs in code: `// ISSUE-#<number>: <description>`          
+      122 +- Migrations are applied via Supabase MCP only at PR-raise    
+          +time, after all commits and tests pass — never earlier        
+      123 +                                                              
+      124 +## Design Rules                                               
+      125 +                                                              
+      126 +- **Typography:** DM Serif Display for headings, Figtree for  
+          +body text                                                     
+      127 +- **Icons:** lucide-react only — no emojis anywhere           
+      128 +- **Animations:** Framer Motion, ease-out — 200–400ms for UI  
+          +transitions, 400–600ms for page transitions, fade + `y: 10 →  
+          +0` for route changes                                          
+      129 +- Always respect `prefers-reduced-motion` via Framer Motion's 
+          + `useReducedMotion` hook — set `duration: 0` when enabled     
+      130 +- **Loading states:** ShadCN `Skeleton` components with       
+          +shimmer — never spinner-only for content areas                
+      131 +- **Forms:** no focus rings (`focus-visible:ring-0`), inline  
+          +field-level error messages only — no top-of-form banners      
+      132 +- No blank white flash between route transitions — use        
+          +`AnimatePresence` at the layout level                         
+      133 +- Full responsiveness: 320px mobile through 1536px+ desktop — 
+          + no fixed pixel widths on containers                          
+      134 +                                                              
+      135 +## AI Behavior Rules                                          
+      136 +                                                              
+      137 +- Never hallucinate architecture decisions — halt and ask if  
+          +context is missing                                            
+      138 +- Implement only what the current issue explicitly requests — 
+          + never prematurely build future features                      
+      139 +- Push back if a requested change violates these rules,       
+          +breaks RLS, exposes a key to the client, or contradicts the   
+          +PRD                                                           
+      140 +- All implementation decisions must be traceable to a PRD     
+          +requirement ID                                                
+      141 +                                                              
+      142  ## Sprint Structure                                           
+      143                                                                
+      144 -4 sprints (Mar 22 – Apr 17). Each sprint issue in             
+          -`SPRINT_PLAN.md` specifies:                                   
+      145 -- Exact files owned (zero merge conflicts by design)          
+      146 -- Acceptance criteria and explicit test cases                 
+      147 -- Whether property-based tests are required                   
+      144 +4 sprints (Mar 22 – Apr 17). Each sprint issue in             
+          +`SPRINT_PLAN.md` specifies exact files owned (zero merge      
+          +conflicts by design), acceptance criteria, explicit test      
+          +cases, and whether property-based tests are required.         
+      145                                                                
+      146 -Sprint 1 (S1-01 through S1-XX)                                
+          -: Project scaffolding, auth, setup wizard                     
+      147 -Sprint 2: Session state machine + speech I/O                  
+      148 -Sprint 3: Reports, dashboard, admin panel                     
+      149 -Sprint 4: CI/CD, monitoring, polish                           
+      146 +- Sprint 1: Project scaffolding, auth, setup wizard           
+      147 +- Sprint 2: Session state machine + speech I/O                
+      148 +- Sprint 3: Reports, dashboard, admin panel                   
+      149 +- Sprint 4: CI/CD, monitoring, polish                         
+
+⏺ Now verify no npm references crept back in and spot-check a few key sections:
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Clean. Here's a summary of everything added to CLAUDE.md:
+
+  Tech Stack — added ShadCN "never build from scratch" rule, sessionStorage
+  client cache, react-hook-form + zod scope (forms AND API response validation),
+   lucide-react icon constraint, Framer Motion scope.
+
+  New: Folder Structure — strict directory map matching PRD Section 9, with
+  per-directory purpose notes and the rule to never deviate.
+
+  New: Database Migration Rules — naming convention (<issue-number>_<desc>.sql),
+   one file per issue, never touch other issues' files, Supabase MCP only at
+  PR-raise time.
+
+  New: Naming Conventions — kebab-case files, PascalCase components,
+  zero-tolerance policy on any/unused imports/lint warnings/Prettier.
+
+  New: Explore → Plan → Implement → Commit Workflow — all 4 phases with save
+  locations and /clear points.
+
+  New: PostToolUse Hook — documents the auto-Prettier behavior.
+
+  Session State Machine — added SessionShell.tsx as orchestrator rule and
+  corrected state names.
+
+  AI Gateway — added retry logic (exponential backoff, max 3, 429/503) and token
+   management (≥12,000 → summarize first).
+
+  New: Security Rules — double auth, no NEXT_PUBLIC_ secrets, no client-side
+  provider calls, TruffleHog.
+
+  Testing — added TDD commit sequence, "never change tests / never delete tests"
+   rules, corrected 5 module names, added mocking strategy, added yarn 
+  test:integration to pre-commit checklist.
+
+  New: Branching, Commits & PRs — branch naming, commit format, Closes #<n>,
+  TODO format, migration timing.
+
+  New: Design Rules — typography, Framer Motion timings, useReducedMotion,
+  Skeleton loading, form focus ring rule, AnimatePresence, responsive bounds.
+
+  New: AI Behavior Rules — no hallucination, issue scope, PRD traceability.
+
+✻ Brewed for 3m 2s
+
+❯ At least one @import — point it to another file like your PRD, API docs, or   
+schema (e.g., @import docs/PRD.md). Did you add it? I want you to add           
+@project-memory/PRD.md for now                                                  
+  ⎿  Read project-memory/PRD.md (2151 lines)
+
+⏺ Updated plan
+  ⎿  /plan to preview
+
+⏺ Updated plan
+  ⎿  /plan to preview
+
+⏺ User approved Claude's plan
+  ⎿  Plan saved to: ~/.claude/plans/nifty-cuddling-sky.md · /plan to edit
+     Plan: Add @import directive for PRD to CLAUDE.md
+
+     Context
+
+     The user wants an @import directive pointing to the PRD added to CLAUDE.md,
+      so future Claude instances automatically load the PRD into context. The
+     PRD is the single source of truth for all requirements.
+
+     File to Modify
+
+     CLAUDE.md
+
+     Change
+
+     Add @import project-memory/PRD.md on its own line directly after the
+     Project Overview heading line ("MIRA (Mock Interview..."), before the
+     paragraph that already references the PRD file. This makes the import
+     visible and co-located with the existing prose reference.
+
+     Gap Analysis (previous task — completed)
+
+     Tech Stack additions
+
+     - ShadCN: use primitives wherever a match exists — never build
+     button/input/dialog from scratch
+     - Client Cache: sessionStorage caches question set to survive page refresh
+     during /session
+     - Forms: react-hook-form + zod for all form inputs AND all API response
+     validation
+     - Icons: lucide-react only — never use emojis in the UI
+     - Framer Motion scope: all page transitions, component mounts, interactive
+     state changes
+
+     New section: Folder Structure (Strict)
+
+     - app/ — pages and layouts only, no business logic
+     - components/ui/ — ShadCN auto-generated, never edit these files
+     - Feature component dirs: components/auth/, setup/, session/, report/,
+     admin/, dashboard/, profile/, shared/
+     - lib/gateway/ — router, adapters (gemini.ts, groq.ts), prompts, logger
+     - lib/supabase/ — all DB query functions; never write raw queries in
+     components or pages
+     - lib/speech/ — TTS and speech recognition abstractions
+     - lib/pdf/ — resume parsing and report PDF generation
+     - lib/ — pure business logic: scoring.ts, tokenCounter.ts,
+     questionDedup.ts, silenceDetector.ts
+     - store/ — Zustand stores only
+     - types/ — global TypeScript types and Zod schemas
+     - supabase/migrations/ — every DB schema change must be a .sql file here
+
+     New section: Database Migration Rules
+
+     - All schema changes go in supabase/migrations/ as raw SQL
+     - Naming: <issue-number>_<short-description>.sql (no timestamp prefix)
+     - One migration file per issue; never spread across multiple files for the
+     same issue
+     - Never edit migration files belonging to other issues
+     - Migrations applied via Supabase MCP only at PR-raise time (after all
+     commits + tests pass)
+     - Never apply changes via Supabase Studio without a migration file first
+
+     New section: Naming Conventions
+
+     - Files/directories: kebab-case
+     - React components: PascalCase
+     - Zero tolerance: no any, no unused imports, no ESLint warnings, no
+     Prettier violations at any commit
+
+     New section: Explore → Plan → Implement → Commit Workflow
+
+     - Required for features touching 3+ files, or involving auth/permissions/DB
+      schema/AI gateway
+     - Phase 1 Explore: use Glob/Grep/Read, save to
+     docs/explorations/<issue-number>-exploration.md, run /clear
+     - Phase 2 Plan: enter Plan mode, read exploration + PRD sections, save to
+     docs/plans/<issue-number>-plan.md, run /clear
+     - Phase 3 Implement: TDD — failing tests first → commit → implement →
+     commit → refactor → commit; never deviate from plan without updating plan
+     file
+     - Phase 4 Commit: commit at each checkpoint; raise PR then apply migration
+     via Supabase MCP
+
+     New section: PostToolUse Hook
+
+     - Hook auto-runs Prettier after every Edit/Write tool call — no need to run
+      yarn format manually
+     - yarn format:check still runs as final CI gate
+
+     Session State Machine additions
+
+     - SessionShell.tsx is the orchestrator — never put state logic in the page
+     file
+     - State names: loading (witty phrases), mic-permission, countdown, chat
+     (active interview), rating, closing-note, report-wait, complete
+
+     AI Gateway additions
+
+     - Retry logic: exponential backoff, max 3 retries, for 429 and 503 errors
+     - Token management: estimate tokens (1 token ≈ 4 chars); if ≥ 12,000
+     tokens, call /api/summarize-context before any other gateway call
+
+     New section: Security Rules
+
+     - RLS on every table — users can only read/write their own rows
+     - Admin routes/tables require role = admin checked at both middleware AND
+     RLS layer
+     - SUPABASE_SERVICE_ROLE_KEY and all AI provider keys: server-side only,
+     never in NEXT_PUBLIC_ vars
+     - All AI calls proxied through gateway — no provider SDK called from client
+     - All DB queries via typed Supabase JS client — no raw SQL strings built
+     from user input
+     - Double auth: middleware checks session at edge; route handler re-verifies
+      with supabase.auth.getUser()
+     - TruffleHog secrets scanning blocks any PR with a committed secret
+
+     Testing additions
+
+     - TDD order: write failing test → commit → implement minimum to pass →
+     commit → refactor → commit
+     - Never change tests to match a broken implementation — fix the code
+     - Never delete existing test cases
+     - Correct 5 property-based modules: scoring.ts, tokenCounter.ts,
+     questionDedup.ts, silenceDetector.ts, sessionStore.ts
+     - Mocking: gateway via vi.mock('lib/gateway'), Supabase via custom factory,
+      Web Speech API + SpeechSynthesis via vi.stubGlobal
+     - Add yarn test:integration to pre-commit checklist
+
+     New section: Branching, Commits & PRs
+
+     - Never commit directly to main
+     - Branch naming: feature/<issue-number>-<short-description>, bug/...,
+     chore/...
+     - Commit format: [#<issue-number>] <type>: <description>
+     - Every PR links issue with Closes #<number>
+     - TODOs: // ISSUE-#<number>: <description>
+     - Migration timing: apply via Supabase MCP only at PR-raise time, after all
+      commits and tests pass
+
+     New section: Design Rules
+
+     - Typography: DM Serif Display (headings), Figtree (body)
+     - No emojis anywhere — lucide-react icons only
+     - Framer Motion: ease-out, 200–400ms for UI transitions, 400–600ms for page
+      transitions, fade + y: 10 → 0 for route changes
+     - Always respect prefers-reduced-motion via useReducedMotion — set
+     duration: 0 when enabled
+     - Loading states: ShadCN Skeleton with shimmer — never spinner-only for
+     content areas
+     - Forms: no focus rings (focus-visible:ring-0), inline field-level error
+     messages only
+     - No blank white flash between routes — use AnimatePresence at the layout
+     level
+     - Full responsiveness: 320px mobile through 1536px+ desktop — no fixed
+     pixel widths on containers
+
+     New section: AI Behavior Rules
+
+     - Never hallucinate architecture decisions — halt and ask if context is
+     missing
+     - Implement only what the current issue explicitly requests — never
+     prematurely build future features
+     - Push back if a change violates these rules, breaks RLS, exposes a key to
+     the client, or contradicts the PRD
+     - All implementation decisions must be traceable to a PRD requirement ID
+
+     Verification
+
+     After editing CLAUDE.md:
+     1. Re-read the full file and cross-check every bullet in the Gap Analysis
+     above is present
+     2. Grep for any remaining mentions of npm (should be zero)
+     3. Confirm no content already in CLAUDE.md is duplicated
+
+
+
+
+
+
+
+
+
+⏺ Update(CLAUDE.md)
+  ⎿  Added 2 lines
+       4                                                                 
+       5  ## Project Overview                                            
+       6                                                                 
+       7 +@import project-memory/PRD.md                                  
+       8 +                                                               
+       9  **MIRA** (Mock Interview and Response Analyzer) is an          
+          AI-powered mock interview platform. Users provide a resume +   
+          job description, MIRA generates personalized questions via     
+          Gemini/Groq, captures spoken answers via Web Speech API, and   
+          delivers structured feedback reports.                          
+      10                                                                 
+      11  Deadline: April 19, 2026. Four sprints from March 22 – April   
+          17.                                                            
+
+⏺ Done. @import project-memory/PRD.md is now on its own line at the top of the
+  Project Overview section, so future Claude instances will automatically load
+  the full PRD into context when opening this repo.
+
+❯ Requirements: CLAUDE.md must include: tech stack, architecture decisions,     
+coding conventions, testing strategy, and project-specific do's/don'ts. At      
+least one @import reference to additional context (e.g., PRD, API docs).        
+                                                                                
+Does ours have it all. give me a tabular analysiss with checkmark or cross      
+based on covering all these                                                     
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Updated plan
+  ⎿  /plan to preview
+⏺ User approved Claude's plan
+  ⎿  Plan saved to: ~/.claude/plans/nifty-cuddling-sky.md · /plan to edit
+     Analysis: CLAUDE.md coverage check (read-only, no changes needed)
+
+     Context
+
+     The user wants an @import directive pointing to the PRD added to CLAUDE.md,
+      so future Claude instances automatically load the PRD into context. The
+     PRD is the single source of truth for all requirements.
+
+     File to Modify
+
+     CLAUDE.md
+
+     Change
+
+     Add @import project-memory/PRD.md on its own line directly after the
+     Project Overview heading line ("MIRA (Mock Interview..."), before the
+     paragraph that already references the PRD file. This makes the import
+     visible and co-located with the existing prose reference.
+
+     Gap Analysis (previous task — completed)
+
+     Tech Stack additions
+
+     - ShadCN: use primitives wherever a match exists — never build
+     button/input/dialog from scratch
+     - Client Cache: sessionStorage caches question set to survive page refresh
+     during /session
+     - Forms: react-hook-form + zod for all form inputs AND all API response
+     validation
+     - Icons: lucide-react only — never use emojis in the UI
+     - Framer Motion scope: all page transitions, component mounts, interactive
+     state changes
+
+     New section: Folder Structure (Strict)
+
+     - app/ — pages and layouts only, no business logic
+     - components/ui/ — ShadCN auto-generated, never edit these files
+     - Feature component dirs: components/auth/, setup/, session/, report/,
+     admin/, dashboard/, profile/, shared/
+     - lib/gateway/ — router, adapters (gemini.ts, groq.ts), prompts, logger
+     - lib/supabase/ — all DB query functions; never write raw queries in
+     components or pages
+     - lib/speech/ — TTS and speech recognition abstractions
+     - lib/pdf/ — resume parsing and report PDF generation
+     - lib/ — pure business logic: scoring.ts, tokenCounter.ts,
+     questionDedup.ts, silenceDetector.ts
+     - store/ — Zustand stores only
+     - types/ — global TypeScript types and Zod schemas
+     - supabase/migrations/ — every DB schema change must be a .sql file here
+
+     New section: Database Migration Rules
+
+     - All schema changes go in supabase/migrations/ as raw SQL
+     - Naming: <issue-number>_<short-description>.sql (no timestamp prefix)
+     - One migration file per issue; never spread across multiple files for the
+     same issue
+     - Never edit migration files belonging to other issues
+     - Migrations applied via Supabase MCP only at PR-raise time (after all
+     commits + tests pass)
+     - Never apply changes via Supabase Studio without a migration file first
+
+     New section: Naming Conventions
+
+     - Files/directories: kebab-case
+     - React components: PascalCase
+     - Zero tolerance: no any, no unused imports, no ESLint warnings, no
+     Prettier violations at any commit
+
+     New section: Explore → Plan → Implement → Commit Workflow
+
+     - Required for features touching 3+ files, or involving auth/permissions/DB
+      schema/AI gateway
+     - Phase 1 Explore: use Glob/Grep/Read, save to
+     docs/explorations/<issue-number>-exploration.md, run /clear
+     - Phase 2 Plan: enter Plan mode, read exploration + PRD sections, save to
+     docs/plans/<issue-number>-plan.md, run /clear
+     - Phase 3 Implement: TDD — failing tests first → commit → implement →
+     commit → refactor → commit; never deviate from plan without updating plan
+     file
+     - Phase 4 Commit: commit at each checkpoint; raise PR then apply migration
+     via Supabase MCP
+
+     New section: PostToolUse Hook
+
+     - Hook auto-runs Prettier after every Edit/Write tool call — no need to run
+      yarn format manually
+     - yarn format:check still runs as final CI gate
+
+     Session State Machine additions
+
+     - SessionShell.tsx is the orchestrator — never put state logic in the page
+     file
+     - State names: loading (witty phrases), mic-permission, countdown, chat
+     (active interview), rating, closing-note, report-wait, complete
+
+     AI Gateway additions
+
+     - Retry logic: exponential backoff, max 3 retries, for 429 and 503 errors
+     - Token management: estimate tokens (1 token ≈ 4 chars); if ≥ 12,000
+     tokens, call /api/summarize-context before any other gateway call
+
+     New section: Security Rules
+
+     - RLS on every table — users can only read/write their own rows
+     - Admin routes/tables require role = admin checked at both middleware AND
+     RLS layer
+     - SUPABASE_SERVICE_ROLE_KEY and all AI provider keys: server-side only,
+     never in NEXT_PUBLIC_ vars
+     - All AI calls proxied through gateway — no provider SDK called from client
+     - All DB queries via typed Supabase JS client — no raw SQL strings built
+     from user input
+     - Double auth: middleware checks session at edge; route handler re-verifies
+      with supabase.auth.getUser()
+     - TruffleHog secrets scanning blocks any PR with a committed secret
+
+     Testing additions
+
+     - TDD order: write failing test → commit → implement minimum to pass →
+     commit → refactor → commit
+     - Never change tests to match a broken implementation — fix the code
+     - Never delete existing test cases
+     - Correct 5 property-based modules: scoring.ts, tokenCounter.ts,
+     questionDedup.ts, silenceDetector.ts, sessionStore.ts
+     - Mocking: gateway via vi.mock('lib/gateway'), Supabase via custom factory,
+      Web Speech API + SpeechSynthesis via vi.stubGlobal
+     - Add yarn test:integration to pre-commit checklist
+
+     New section: Branching, Commits & PRs
+
+     - Never commit directly to main
+     - Branch naming: feature/<issue-number>-<short-description>, bug/...,
+     chore/...
+     - Commit format: [#<issue-number>] <type>: <description>
+     - Every PR links issue with Closes #<number>
+     - TODOs: // ISSUE-#<number>: <description>
+     - Migration timing: apply via Supabase MCP only at PR-raise time, after all
+      commits and tests pass
+
+     New section: Design Rules
+
+     - Typography: DM Serif Display (headings), Figtree (body)
+     - No emojis anywhere — lucide-react icons only
+     - Framer Motion: ease-out, 200–400ms for UI transitions, 400–600ms for page
+      transitions, fade + y: 10 → 0 for route changes
+     - Always respect prefers-reduced-motion via useReducedMotion — set
+     duration: 0 when enabled
+     - Loading states: ShadCN Skeleton with shimmer — never spinner-only for
+     content areas
+     - Forms: no focus rings (focus-visible:ring-0), inline field-level error
+     messages only
+     - No blank white flash between routes — use AnimatePresence at the layout
+     level
+     - Full responsiveness: 320px mobile through 1536px+ desktop — no fixed
+     pixel widths on containers
+
+     New section: AI Behavior Rules
+
+     - Never hallucinate architecture decisions — halt and ask if context is
+     missing
+     - Implement only what the current issue explicitly requests — never
+     prematurely build future features
+     - Push back if a change violates these rules, breaks RLS, exposes a key to
+     the client, or contradicts the PRD
+     - All implementation decisions must be traceable to a PRD requirement ID
+
+     Verification
+
+     After editing CLAUDE.md:
+     1. Re-read the full file and cross-check every bullet in the Gap Analysis
+     above is present
+     2. Grep for any remaining mentions of npm (should be zero)
+     3. Confirm no content already in CLAUDE.md is duplicated
+
+
+
+
+
+
+
+
+
+⏺ Here's the full coverage analysis:
+
+  Requirement: Tech stack
+  Covered?: ✅
+  Where in CLAUDE.md: ## Tech Stack (Strict — Do Not Substitute) — lists all 14
+    libraries with constraints
+  ────────────────────────────────────────
+  Requirement: Architecture decisions
+  Covered?: ✅
+  Where in CLAUDE.md: ## Architecture — Route groups, session state machine, AI
+    gateway internals, API routes, DB schema, browser API choices
+  ────────────────────────────────────────
+  Requirement: Coding conventions
+  Covered?: ✅
+  Where in CLAUDE.md: ## Naming Conventions (kebab-case files, PascalCase
+    components, zero tolerance rules), ## Folder Structure (strict directory map
+
+    with per-dir rules)
+  ────────────────────────────────────────
+  Requirement: Testing strategy
+  Covered?: ✅
+  Where in CLAUDE.md: ## Testing Strategy (TDD — Strictly Enforced) — TDD order,
+
+    coverage threshold (80%), 5 property-based modules, mocking strategy,
+  Stryker
+     mutation targets
+  ────────────────────────────────────────
+  Requirement: Project-specific do's
+  Covered?: ✅
+  Where in CLAUDE.md: ## Security Rules, ## Design Rules, ## Explore → Plan → 
+    Implement → Commit Workflow, ## Branching, Commits & PRs
+  ────────────────────────────────────────
+  Requirement: Project-specific don'ts
+  Covered?: ✅
+  Where in CLAUDE.md: Tech Stack "never"s, Folder Structure "never deviate",
+    Security "never in NEXT_PUBLIC_", Design "never use emojis", AI Behavior
+    "never hallucinate"
+  ────────────────────────────────────────
+  Requirement: @import reference
+  Covered?: ✅
+  Where in CLAUDE.md: Line 7: @import project-memory/PRD.md
+
+  All 7 requirements are fully covered. Nothing is missing.
+
+❯ commit and push code until now                                                
+
+⏺ Bash(git status && git log --oneline -5)
+  ⎿  Error: Exit code 128
+     On branch main
+
+     No commits yet
+
+     Untracked files:
+       (use "git add <file>..." to include in what will be committed)
+        .DS_Store
+        CLAUDE.md
+        project-memory/
+     … +3 lines (ctrl+o to see all)
+
+⏺ Bash(git remote -v)
+  ⎿  origin     git@github.com:likhithreddy/mira.git (fetch)
+     origin     git@github.com:likhithreddy/mira.git (push)
+
+⏺ Updated plan
+  ⎿  /plan to preview
+
+⏺ Updated plan
+  ⎿  /plan to preview
+
+⏺ User approved Claude's plan
+  ⎿  Plan saved to: ~/.claude/plans/nifty-cuddling-sky.md · /plan to edit
+     Plan: Initial commit and push to origin/main
+
+     Context
+
+     No commits exist yet. Files to commit: CLAUDE.md and project-memory/
+     (PRD.md + SPRINT_PLAN.md). .DS_Store must be excluded via .gitignore.
+     Remote is git@github.com:likhithreddy/mira.git.
+
+     File to Modify
+
+     CLAUDE.md
+
+     Change
+
+     Add @import project-memory/PRD.md on its own line directly after the
+     Project Overview heading line ("MIRA (Mock Interview..."), before the
+     paragraph that already references the PRD file. This makes the import
+     visible and co-located with the existing prose reference.
+
+     Gap Analysis (previous task — completed)
+
+     Tech Stack additions
+
+     - ShadCN: use primitives wherever a match exists — never build
+     button/input/dialog from scratch
+     - Client Cache: sessionStorage caches question set to survive page refresh
+     during /session
+     - Forms: react-hook-form + zod for all form inputs AND all API response
+     validation
+     - Icons: lucide-react only — never use emojis in the UI
+     - Framer Motion scope: all page transitions, component mounts, interactive
+     state changes
+
+     New section: Folder Structure (Strict)
+
+     - app/ — pages and layouts only, no business logic
+     - components/ui/ — ShadCN auto-generated, never edit these files
+     - Feature component dirs: components/auth/, setup/, session/, report/,
+     admin/, dashboard/, profile/, shared/
+     - lib/gateway/ — router, adapters (gemini.ts, groq.ts), prompts, logger
+     - lib/supabase/ — all DB query functions; never write raw queries in
+     components or pages
+     - lib/speech/ — TTS and speech recognition abstractions
+     - lib/pdf/ — resume parsing and report PDF generation
+     - lib/ — pure business logic: scoring.ts, tokenCounter.ts,
+     questionDedup.ts, silenceDetector.ts
+     - store/ — Zustand stores only
+     - types/ — global TypeScript types and Zod schemas
+     - supabase/migrations/ — every DB schema change must be a .sql file here
+
+     New section: Database Migration Rules
+
+     - All schema changes go in supabase/migrations/ as raw SQL
+     - Naming: <issue-number>_<short-description>.sql (no timestamp prefix)
+     - One migration file per issue; never spread across multiple files for the
+     same issue
+     - Never edit migration files belonging to other issues
+     - Migrations applied via Supabase MCP only at PR-raise time (after all
+     commits + tests pass)
+     - Never apply changes via Supabase Studio without a migration file first
+
+     New section: Naming Conventions
+
+     - Files/directories: kebab-case
+     - React components: PascalCase
+     - Zero tolerance: no any, no unused imports, no ESLint warnings, no
+     Prettier violations at any commit
+
+     New section: Explore → Plan → Implement → Commit Workflow
+
+     - Required for features touching 3+ files, or involving auth/permissions/DB
+      schema/AI gateway
+     - Phase 1 Explore: use Glob/Grep/Read, save to
+     docs/explorations/<issue-number>-exploration.md, run /clear
+     - Phase 2 Plan: enter Plan mode, read exploration + PRD sections, save to
+     docs/plans/<issue-number>-plan.md, run /clear
+     - Phase 3 Implement: TDD — failing tests first → commit → implement →
+     commit → refactor → commit; never deviate from plan without updating plan
+     file
+     - Phase 4 Commit: commit at each checkpoint; raise PR then apply migration
+     via Supabase MCP
+
+     New section: PostToolUse Hook
+
+     - Hook auto-runs Prettier after every Edit/Write tool call — no need to run
+      yarn format manually
+     - yarn format:check still runs as final CI gate
+
+     Session State Machine additions
+
+     - SessionShell.tsx is the orchestrator — never put state logic in the page
+     file
+     - State names: loading (witty phrases), mic-permission, countdown, chat
+     (active interview), rating, closing-note, report-wait, complete
+
+     AI Gateway additions
+
+     - Retry logic: exponential backoff, max 3 retries, for 429 and 503 errors
+     - Token management: estimate tokens (1 token ≈ 4 chars); if ≥ 12,000
+     tokens, call /api/summarize-context before any other gateway call
+
+     New section: Security Rules
+
+     - RLS on every table — users can only read/write their own rows
+     - Admin routes/tables require role = admin checked at both middleware AND
+     RLS layer
+     - SUPABASE_SERVICE_ROLE_KEY and all AI provider keys: server-side only,
+     never in NEXT_PUBLIC_ vars
+     - All AI calls proxied through gateway — no provider SDK called from client
+     - All DB queries via typed Supabase JS client — no raw SQL strings built
+     from user input
+     - Double auth: middleware checks session at edge; route handler re-verifies
+      with supabase.auth.getUser()
+     - TruffleHog secrets scanning blocks any PR with a committed secret
+
+     Testing additions
+
+     - TDD order: write failing test → commit → implement minimum to pass →
+     commit → refactor → commit
+     - Never change tests to match a broken implementation — fix the code
+     - Never delete existing test cases
+     - Correct 5 property-based modules: scoring.ts, tokenCounter.ts,
+     questionDedup.ts, silenceDetector.ts, sessionStore.ts
+     - Mocking: gateway via vi.mock('lib/gateway'), Supabase via custom factory,
+      Web Speech API + SpeechSynthesis via vi.stubGlobal
+     - Add yarn test:integration to pre-commit checklist
+
+     New section: Branching, Commits & PRs
+
+     - Never commit directly to main
+     - Branch naming: feature/<issue-number>-<short-description>, bug/...,
+     chore/...
+     - Commit format: [#<issue-number>] <type>: <description>
+     - Every PR links issue with Closes #<number>
+     - TODOs: // ISSUE-#<number>: <description>
+     - Migration timing: apply via Supabase MCP only at PR-raise time, after all
+      commits and tests pass
+
+     New section: Design Rules
+
+     - Typography: DM Serif Display (headings), Figtree (body)
+     - No emojis anywhere — lucide-react icons only
+     - Framer Motion: ease-out, 200–400ms for UI transitions, 400–600ms for page
+      transitions, fade + y: 10 → 0 for route changes
+     - Always respect prefers-reduced-motion via useReducedMotion — set
+     duration: 0 when enabled
+     - Loading states: ShadCN Skeleton with shimmer — never spinner-only for
+     content areas
+     - Forms: no focus rings (focus-visible:ring-0), inline field-level error
+     messages only
+     - No blank white flash between routes — use AnimatePresence at the layout
+     level
+     - Full responsiveness: 320px mobile through 1536px+ desktop — no fixed
+     pixel widths on containers
+
+     New section: AI Behavior Rules
+
+     - Never hallucinate architecture decisions — halt and ask if context is
+     missing
+     - Implement only what the current issue explicitly requests — never
+     prematurely build future features
+     - Push back if a change violates these rules, breaks RLS, exposes a key to
+     the client, or contradicts the PRD
+     - All implementation decisions must be traceable to a PRD requirement ID
+
+     Verification
+
+     After editing CLAUDE.md:
+     1. Re-read the full file and cross-check every bullet in the Gap Analysis
+     above is present
+     2. Grep for any remaining mentions of npm (should be zero)
+     3. Confirm no content already in CLAUDE.md is duplicated
+
+
+
+
+
+
+
+⏺ Write(.gitignore)
+  ⎿  Wrote 43 lines to .gitignore
+     # macOS
+     .DS_Store
+
+     # Dependencies
+     node_modules/
+     .yarn/cache
+     .yarn/unplugged
+     .yarn/build-state.yml
+     .yarn/install-state.gz
+     .pnp.*
+     … +33 lines (ctrl+o to expand)
+
+⏺ Bash(git add .gitignore CLAUDE.md project-memory/ && git status)
+  ⎿  On branch main
+
+     No commits yet
+     … +7 lines (ctrl+o to expand)
+
+⏺ Bash(git commit -m "$(cat <<'EOF'
+      chore: initial repo setup with CLAUDE.md and project memory…)
+  ⎿  [main (root-commit) 19ddf6a] chore: initial repo setup with CLAUDE.md
+     and project memory
+      4 files changed, 3894 insertions(+)
+     … +4 lines (ctrl+o to expand)
+
+⏺ Bash(git push -u origin main)
+  ⎿  To github.com:likhithreddy/mira.git
+      * [new branch]      main -> main
+     branch 'main' set up to track 'origin/main'.
+
+⏺ Done. Initial commit 19ddf6a pushed to github.com:likhithreddy/mira.git:
+
+  - .gitignore — excludes .DS_Store, node_modules, .env*, .next/, coverage/,
+  etc.
+  - CLAUDE.md — full project guidance
+  - project-memory/PRD.md + project-memory/SPRINT_PLAN.md — project docs
+
+✻ Cooked for 47s
