@@ -9,6 +9,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: 'v8',
+      exclude: ['types/**', '*.config.ts', '*.config.js'],
       thresholds: {
         branches: 80,
         functions: 80,
