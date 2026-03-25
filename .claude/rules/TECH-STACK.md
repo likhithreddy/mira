@@ -1,0 +1,21 @@
+## Tech Stack (Strict — Do Not Substitute)
+
+- **Framework:** Next.js 14+ App Router + TypeScript strict mode
+- **Styling:** Tailwind CSS + ShadCN/UI — use ShadCN primitives wherever a match exists; never build a button, input, or dialog from scratch
+- **Animations:** Framer Motion — all page transitions, component mounts, and interactive state changes
+- **State:** Zustand — session state, conversation history, UI state
+- **Client Cache:** sessionStorage — caches the question set to survive page refresh during `/session`
+- **Auth + DB:** Supabase Auth (`@supabase/ssr`) — email+password and Google OAuth; Supabase PostgreSQL with RLS on every table; pgcrypto for API key encryption
+- **File Storage:** Supabase Storage — private `resumes` bucket, user-scoped paths
+- **AI:** Google Gemini Pro + Groq — exclusively via the AI gateway in Next.js API routes; never called directly from the client
+- **Speech:** Web Speech API (recognition) + SpeechSynthesis API (TTS) — Chromium only for full functionality
+- **PDF:** pdf.js (client-side resume parsing), jsPDF (client-side report generation)
+- **Forms/Validation:** react-hook-form + zod — all form inputs and all API response validation
+- **Icons:** lucide-react only — never use emojis anywhere in the UI
+- **Charts:** Recharts — score trend line chart on dashboard; use built-in animation on mount
+- **Toasts:** Sonner (via ShadCN `Toaster`) — `toast()` utility from `lib/toast.ts`; never called directly from UI components
+- **Error Tracking:** Sentry (`@sentry/nextjs`)
+- **APM:** Vercel Analytics — request latency, error rates, Web Vitals per route/page
+- **Uptime Monitoring:** Better Stack — 1-minute HTTP checks, email alerts on downtime
+- **Testing:** Vitest + React Testing Library (unit/integration), fast-check (property-based), Playwright (E2E), Stryker (mutation)
+- **Hosting:** Vercel only
