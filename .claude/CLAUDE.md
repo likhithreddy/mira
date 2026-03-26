@@ -40,3 +40,5 @@ Full requirements are in `project-memory/PRD.md` (single source of truth). Alway
 @import .claude/rules/DESIGN.md
 
 @import .claude/rules/PR-CHECKLIST.md
+
+@import .claude/rules/PR_REVIEW.md
