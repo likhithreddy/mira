@@ -18,7 +18,7 @@ cd "$PROJECT_ROOT"
 echo "=== Pre-PR checks running ===" >&2
 
 # Run all pre-checks sequentially
-if yarn lint && yarn format:check && yarn test --coverage && yarn test:integration && yarn test:e2e; then
+if yarn lint && yarn format:check && yarn test && yarn test:integration && yarn test:e2e; then
   # All checks passed — inject checklist reminder into model context
   jq -n '{
     hookSpecificOutput: {
