@@ -105,6 +105,24 @@ jobs:
       - uses: github/codeql-action/analyze@v3
         with:
           category: /language:typescript
+          output: sarif-results
+          upload: always
+      - name: Fail on Critical or High findings
+        run: |
+          count=$(python3 -c "
+          import json, glob, sys
+          total = sum(
+              1 for f in glob.glob('sarif-results/*.sarif')
+              for run in json.load(open(f)).get('runs', [])
+              for result in run.get('results', [])
+              if result.get('level') == 'error'
+          )
+          print(total)
+          ")
+          if [ "$count" -gt "0" ]; then
+            echo "::error::CodeQL found $count Critical/High severity finding(s). Check the Security tab."
+            exit 1
+          fi
 
   # Stage 8 — Vitest unit tests with coverage
   vitest:
