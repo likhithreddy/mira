@@ -3,12 +3,10 @@ name: PR Pipeline
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, closed]
 
 jobs:
   # Stage 1 — TypeScript type check
   type-check:
-    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +19,6 @@ jobs:
 
   # Stage 2 — Next.js production build
   next-build:
-    if: github.event.action != 'closed'
     needs: type-check
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +32,6 @@ jobs:
 
   # Stage 3 — ESLint
   lint-check:
-    if: github.event.action != 'closed'
     needs: next-build
     runs-on: ubuntu-latest
     steps:
@@ -49,7 +45,6 @@ jobs:
 
   # Stage 4 — Prettier format check
   format-check:
-    if: github.event.action != 'closed'
     needs: lint-check
     runs-on: ubuntu-latest
     steps:
@@ -63,7 +58,6 @@ jobs:
 
   # Stage 5 — Dependency vulnerability audit
   dependency-audit:
-    if: github.event.action != 'closed'
     needs: format-check
     runs-on: ubuntu-latest
     steps:
@@ -72,11 +66,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
-      - run: yarn audit --level high
+      - run: |
+          yarn audit --level high; EXIT=$?
+          # yarn v1 exit codes are a bitmask: 2=low, 4=moderate, 8=high, 16=critical
+          # --level high only filters display, not the exit code — check bits manually
+          [ $((EXIT & 24)) -ne 0 ] && exit 1 || exit 0
 
   # Stage 6 — TruffleHog secrets scan
   secrets-scan:
-    if: github.event.action != 'closed'
     needs: dependency-audit
     runs-on: ubuntu-latest
     steps:
@@ -90,7 +87,6 @@ jobs:
 
   # Stage 7 — CodeQL static analysis (TypeScript)
   codeql-analysis:
-    if: github.event.action != 'closed'
     needs: secrets-scan
     runs-on: ubuntu-latest
     permissions:
@@ -126,7 +122,6 @@ jobs:
 
   # Stage 8 — Vitest unit tests with coverage
   vitest:
-    if: github.event.action != 'closed'
     needs: codeql-analysis
     runs-on: ubuntu-latest
     steps:
@@ -145,7 +140,6 @@ jobs:
 
   # Stage 9 — Playwright E2E tests (Chromium + WebKit)
   playwright:
-    if: github.event.action != 'closed'
     needs: vitest
     runs-on: ubuntu-latest
     env:
@@ -175,7 +169,6 @@ jobs:
 
   # Stage 10 — Stryker mutation testing (runs on every PR)
   stryker:
-    if: github.event.action != 'closed'
     needs: playwright
     runs-on: ubuntu-latest
     steps:
@@ -195,7 +188,6 @@ jobs:
 
   # Stage 11 — Claude Code AI review
   claude-code:
-    if: github.event.action != 'closed'
     needs: stryker
     runs-on: ubuntu-latest
     permissions:
@@ -206,51 +198,3 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-
-  # Stage 12 — Vercel preview deployment
-  vercel-preview:
-    if: github.event.action != 'closed'
-    needs: claude-code
-    runs-on: ubuntu-latest
-    outputs:
-      preview_url: ${{ steps.deploy.outputs.preview_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - name: Deploy preview to Vercel
-        id: deploy
-        run: |
-          PREVIEW_URL=$(npx vercel --token ${{ secrets.VERCEL_TOKEN }} --yes 2>&1 | grep -oE 'https://[^ ]+\.vercel\.app' | tail -1)
-          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
-      - name: Post preview URL as PR comment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const previewUrl = '${{ steps.deploy.outputs.preview_url }}';
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## Vercel Preview Deployment\n\n| | |\n|---|---|\n| **Preview URL** | ${previewUrl} |\n| **Branch** | \`${{ github.head_ref }}\` |\n| **Commit** | \`${{ github.event.pull_request.head.sha }}\` |`,
-            });
-
-  # Teardown — Remove Vercel preview on PR close/merge
-  vercel-teardown:
-    if: github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - name: Remove Vercel preview deployment
-        run: |
-          npx vercel remove --token ${{ secrets.VERCEL_TOKEN }} --yes \
-            $(npx vercel ls --token ${{ secrets.VERCEL_TOKEN }} | grep "${{ github.head_ref }}" | awk '{print $1}') \
-            || echo "No preview deployment found to remove"
