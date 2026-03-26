@@ -67,9 +67,10 @@ jobs:
           node-version: '20'
           cache: 'yarn'
       - run: |
-          yarn audit --level high; EXIT=$?
           # yarn v1 exit codes are a bitmask: 2=low, 4=moderate, 8=high, 16=critical
           # --level high only filters display, not the exit code — check bits manually
+          # set +e prevents bash -e from aborting before we can inspect the exit code
+          set +e; yarn audit --level high; EXIT=$?; set -e
           [ $((EXIT & 24)) -ne 0 ] && exit 1 || exit 0
 
   # Stage 6 — TruffleHog secrets scan
@@ -120,8 +121,8 @@ jobs:
             exit 1
           fi
 
-  # Stage 8 — Vitest unit tests with coverage
-  vitest:
+  # Stage 8 — Vitest unit tests with coverage (fails if any metric < 80%)
+  unit-tests:
     needs: codeql-analysis
     runs-on: ubuntu-latest
     steps:
@@ -131,16 +132,32 @@ jobs:
           node-version: '20'
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
-      - run: yarn test --coverage
+      - run: yarn test
       - uses: davelosert/vitest-coverage-report-action@v2
         if: always()
         with:
           json-summary-path: ./coverage/coverage-summary.json
           json-final-path: ./coverage/coverage-final.json
 
-  # Stage 9 — Playwright E2E tests (Chromium + WebKit)
-  playwright:
-    needs: vitest
+  # Stage 9 — Vitest integration tests
+  integration-tests:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_TEST_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_TEST_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - run: yarn test:integration
+
+  # Stage 10 — Playwright E2E tests (Chromium + WebKit)
+  e2e-tests:
+    needs: integration-tests
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_TEST_URL }}
@@ -167,9 +184,9 @@ jobs:
           path: test-results/
           retention-days: 7
 
-  # Stage 10 — Stryker mutation testing (runs on every PR)
-  stryker:
-    needs: playwright
+  # Stage 11 — Stryker mutation testing (runs on every PR)
+  mutation-tests:
+    needs: e2e-tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -186,9 +203,9 @@ jobs:
           path: reports/mutation/
           retention-days: 14
 
-  # Stage 11 — Claude Code AI review
+  # Stage 12 — Claude Code AI review
   claude-code:
-    needs: stryker
+    needs: mutation-tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
