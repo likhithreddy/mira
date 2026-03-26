@@ -49,70 +49,14 @@ Push the branch and open the PR with a detailed body using `gh pr create`. The P
 3. All test cases listed with markdown checkboxes (checked)
 4. All property-based test cases listed with markdown checkboxes (checked, if applicable)
 
-### Step 6 — Approve the PR with a comment
+### Step 6 — Stop: awaiting teammate review
 
-After opening the PR, approve it using:
+**Your job ends at PR creation.** Do NOT approve or merge your own PR. A teammate must review, approve, and merge.
 
-```bash
-gh pr review <number> --approve --body "<approval comment>"
-```
-
-The approval comment must include:
-- A summary of what was implemented (2–4 sentences)
-- Confirmation that all ACs, test cases, and property-based test cases were validated and pass
-
-### Step 7 — Merge the PR (do NOT delete the branch)
-
-After approving, merge using:
-
-```bash
-gh pr merge <number> --merge
-```
-
-Do NOT pass `--delete-branch`. The branch must be preserved after merge.
-
-### Step 8 — Close with a detailed formatted comment
-
-After merging, add a final closing comment to the issue:
-
-```bash
-gh issue comment <number> --body "$(cat <<'EOF'
-<closing comment body>
-EOF
-)"
-```
-
-The closing comment must follow this exact format (use markdown checkboxes, no emojis):
-
-```
-Closed by PR #<pr-number>.
-
-**Summary**
-<Detailed description of what was implemented: files created, tools configured, design decisions made. 3–6 sentences minimum.>
-
-**Acceptance Criteria**
-- [x] <criterion 1>
-- [x] <criterion 2>
-...
-
-**Test Cases**
-- [x] <test case 1>
-- [x] <test case 2>
-...
-
-**Property-Based Test Cases**
-- [x] <property test 1>
-...
-```
-
-Then close the issue:
-
-```bash
-gh issue close <number>
-```
+After opening the PR, notify the user that the PR is ready for their review and provide the PR URL.
 
 ### Placement in Workflow
 
 ```
-Implement → Commit → [Pre-PR Validation] → Push → gh pr create → gh pr review --approve → gh pr merge → gh issue comment → gh issue close
+Implement → Commit → [Pre-PR Validation] → Push → gh pr create → [STOP — teammate reviews, approves, and merges]
 ```
