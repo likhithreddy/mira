@@ -134,11 +134,12 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
       - run: yarn test
-      - uses: davelosert/vitest-coverage-report-action@v2
+      - uses: codecov/codecov-action@v5
         if: always()
         with:
-          json-summary-path: ./coverage/coverage-summary.json
-          json-final-path: ./coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/coverage-final.json
+          fail_ci_if_error: true
 
   # Stage 9 — Vitest integration tests
   integration-tests:
