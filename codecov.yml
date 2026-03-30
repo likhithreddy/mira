@@ -1,0 +1,14 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1% # allow up to 1% drop without failing
+    patch:
+      default:
+        target: 80% # new code in the PR diff must also hit 80%
+
+comment:
+  layout: 'reach,diff,flags,files'
+  behavior: default # update existing comment rather than posting a new one
+  require_changes: true # only comment if coverage changed

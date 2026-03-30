@@ -75,7 +75,7 @@ Every issue contains:
 | S1-04 | `lib/supabase/client.ts`, `lib/supabase/server.ts`, `lib/supabase/middleware.ts`, `types/supabase.ts` |
 | S1-05 | `middleware.ts` |
 | S1-06 | `app/(auth)/login/`, `app/(auth)/signup/`, `app/auth/callback/` |
-| S1-07 | `vercel.json`, Vercel project settings, `.github/workflows/production.yml` |
+| S1-07 | `vercel.json`, Vercel project settings |
 | S1-08 | `app/page.tsx`, `components/landing/` |
 | S1-09 | `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`, `next.config.ts` (Sentry plugin section only) |
 
@@ -131,6 +131,7 @@ Create both production and staging Supabase projects. Run all table migrations. 
 - Trigger `auto_create_profile` on `auth.users` INSERT: creates `profiles` row with `id`, `email`, `role = 'user'`, `is_suspended = false`
 - Private `resumes` bucket created; storage RLS: users can only read/write/delete paths prefixed with their own `auth.uid()`
 - All migration SQL files committed to `supabase/migrations/` with numbered filenames
+- `SUPABASE_TEST_URL` and `SUPABASE_TEST_ANON_KEY` (staging project credentials) added to GitHub repository secrets
 
 **Test cases:**
 - Insert a row into `auth.users` → `profiles` row auto-created with `role = 'user'` and `is_suspended = false`
@@ -147,29 +148,33 @@ Create both production and staging Supabase projects. Run all table migrations. 
 ---
 
 ### S1-03 · `chore`
-**`chore: implement 7-stage GitHub Actions CI/CD pipeline with branch protection rules`**
+**`chore: implement 12-stage sequential GitHub Actions CI/CD pipeline with branch protection rules`**
 
-Implement the full multi-stage GitHub Actions pipeline. Configure branch protection on `main`.
+Implement the full sequential GitHub Actions pipeline. Configure branch protection on `main`. No `production.yml` — Vercel's GitHub integration handles production deploys automatically on push to `main`. Vercel bot handles PR preview deployments natively — no pipeline stage needed.
 
 **Functional acceptance criteria:**
-- `.github/workflows/pr.yml` triggers on `pull_request` targeting `main`
-- **Stage 1** (parallel jobs): `type-check` (`tsc --noEmit`) and `next-build` (`next build`) — Stage 2+ blocked if either fails
-- **Stage 2** (parallel, blocked on Stage 1): `lint-check` (ESLint), `format-check` (Prettier --check), `dependency-audit` (`yarn audit --level high`), `secrets-scan` (`trufflesecurity/trufflehog-actions-scan`), `codeql-analysis` (GitHub CodeQL for TypeScript — fails on Critical or High findings; results in GitHub Security tab)
-- **Stage 3** (blocked on Stage 2): `vitest --coverage`; fails if any coverage metric < 80%; lcov uploaded to Codecov; Codecov posts PR comment with coverage delta
-- **Stage 4** (blocked on Stage 3): `playwright` on Chromium + WebKit; test Supabase project env vars from GitHub Secrets; uploads test report and failure screenshots as artifacts
-- **Stage 5**: `stryker` — runs only on weekly `schedule: cron` trigger, NOT on PRs; fails if mutation score < 60%; uploads HTML report as artifact
-- **Stage 6**: `claude-code` via `anthropics/claude-code-action@v1`; permissions: `contents: read`, `pull-requests: write` only; posts inline comments and PR summary on every PR
-- **Stage 7** (blocked on all above): `vercel-preview` deploys PR branch to isolated Vercel preview URL; URL posted as PR comment; preview torn down on PR close/merge
-- `.github/workflows/production.yml` triggers on push to `main`; runs `next build` then deploys via `vercel --prod`; performance gate: fails if build output exceeds configured size threshold
-- Branch protection on `main`: no direct push, no force push, require PR, Stages 1–4 must pass, minimum 1 approval, stale reviews dismissed on new commits
-- All secrets added to GitHub repository secrets: `VERCEL_TOKEN`, `ANTHROPIC_API_KEY`, `CODECOV_TOKEN`, `SUPABASE_TEST_URL`, `SUPABASE_TEST_ANON_KEY`, `SENTRY_AUTH_TOKEN`
+- `.github/workflows/pr.yml` triggers on `pull_request` targeting `main` (default types: `opened`, `synchronize`, `reopened`)
+- **Stage 1:** `type-check` — `tsc --noEmit`
+- **Stage 2:** `next-build` — `next build` (blocked on Stage 1)
+- **Stage 3:** `lint-check` — ESLint with `--max-warnings 0` (blocked on Stage 2)
+- **Stage 4:** `format-check` — Prettier `--check` (blocked on Stage 3)
+- **Stage 5:** `dependency-audit` — `yarn audit --level high`; uses bitmask check on exit code to fail only on High (bit 8) or Critical (bit 16) — yarn v1 `--level` flag only filters display, not exit code (blocked on Stage 4)
+- **Stage 6:** `secrets-scan` — `trufflesecurity/trufflehog-actions-scan` with `fetch-depth: 0` (blocked on Stage 5)
+- **Stage 7:** `codeql-analysis` — GitHub CodeQL for TypeScript; SARIF saved locally and uploaded to Security tab; fails if any Critical or High finding (`level: error` in SARIF) is detected (blocked on Stage 6)
+- **Stage 8:** `unit-tests` — `yarn test`; fails if any coverage metric < 80% (enforced by Vitest config thresholds); `davelosert/vitest-coverage-report-action` posts per-file coverage as PR comment (blocked on Stage 7)
+- **Stage 9:** `integration-tests` — `yarn test:integration`; `SUPABASE_TEST_URL` and `SUPABASE_TEST_ANON_KEY` from GitHub Secrets (blocked on Stage 8)
+- **Stage 10:** `e2e-tests` — Chromium + WebKit; `SUPABASE_TEST_URL` and `SUPABASE_TEST_ANON_KEY` from GitHub Secrets; uploads test report and failure screenshots as artifacts (blocked on Stage 9)
+- **Stage 11:** `mutation-tests` — `npx stryker run` on every PR; fails if mutation score < 60%; uploads HTML report as artifact (blocked on Stage 10)
+- **Stage 12:** `claude-code` — `anthropics/claude-code-action@v1`; permissions: `contents: read`, `pull-requests: write` only; posts inline comments and PR summary (blocked on Stage 11)
+- Branch protection on `main`: no direct push, no force push, require PR, Stages 1–11 must pass as required status checks, minimum 1 approval, stale reviews dismissed on new commits
+- Required GitHub Secrets: `ANTHROPIC_API_KEY`, `SUPABASE_TEST_URL`, `SUPABASE_TEST_ANON_KEY`, `SENTRY_AUTH_TOKEN` (added per-issue as each service is integrated)
 
 **Test cases:**
-- Open PR with a TypeScript error → Stage 1 type-check fails; PR cannot be merged
-- Open PR with an ESLint violation → Stage 2 lint-check fails; PR cannot be merged
-- Open PR with test coverage at 79% → Stage 3 fails; PR cannot be merged
-- Open a valid PR → all 7 stages pass; preview URL appears as PR comment within 5 minutes
-- Merge valid PR to `main` → production workflow triggers and production URL serves updated code
+- Open PR with a TypeScript error → Stage 1 (`type-check`) fails; all downstream stages skipped; PR cannot be merged
+- Open PR with an ESLint violation → Stages 1–2 pass, Stage 3 (`lint-check`) fails; PR cannot be merged
+- Open PR with unit test coverage at 79% → Stage 8 (`unit-tests`) fails; PR cannot be merged
+- Open PR with mutation score below 60% → Stage 11 (`mutation-tests`) fails; PR cannot be merged
+- Open a valid PR → all 12 stages pass sequentially; Vercel bot posts preview URL as PR comment automatically
 
 **Property-based tests:** N/A — CI/CD configuration.
 
@@ -279,8 +284,7 @@ Connect repository to Vercel. Configure PR Preview, Staging, and Production envi
 - Production environment: deploys from `main`; all production env vars set; `SUPABASE_SERVICE_ROLE_KEY` server-only (no `NEXT_PUBLIC_` prefix)
 - Staging environment: deploys from `staging` branch; uses staging Supabase project env vars
 - Preview environment: auto-created per PR branch; uses test Supabase project env vars
-- `production.yml` triggers on push to `main`; executes `next build`; deploys via `vercel --prod`; fails if build fails
-- Preview URL posted as PR comment by Stage 7 of PR pipeline
+- Preview URL posted as PR comment by Vercel bot (native GitHub integration)
 - Staging URL resolves and returns HTTP 200
 - Production URL resolves and returns HTTP 200
 - Rollback: previous Vercel deployment can be promoted in Vercel dashboard in under 60 seconds
@@ -338,6 +342,7 @@ Add Sentry to the application for client and server error capture.
 - Sentry captures: unhandled exceptions in API routes, React Error Boundary catches, unhandled promise rejections
 - Vercel Analytics enabled on production project
 - Three Sentry alert rules: (1) new issue first seen → email both team members, (2) issue regresses after resolve → email, (3) error volume > 10 in 1 hour → email
+- `SENTRY_AUTH_TOKEN` added to GitHub repository secrets
 
 **Test cases:**
 - Add deliberate `throw new Error('Sentry test')` to a test API route; call it → error appears in Sentry dashboard within 60 seconds
@@ -1423,7 +1428,7 @@ Gap-fill unit tests to reach ≥ 80% coverage. Run Stryker.
 |---|---|---|---|
 | S1-01 | `chore: initialise Next.js project with TypeScript, Tailwind, ShadCN, ESLint, and Prettier` | `chore` | 1 |
 | S1-02 | `chore: create full Supabase database schema with RLS policies, triggers, and storage bucket` | `chore` | 1 |
-| S1-03 | `chore: implement 7-stage GitHub Actions CI/CD pipeline with branch protection rules` | `chore` | 1 |
+| S1-03 | `chore: implement 12-stage sequential GitHub Actions CI/CD pipeline with branch protection rules` | `chore` | 1 |
 | S1-04 | `chore: integrate Supabase SSR client for browser, server, and middleware usage contexts` | `chore` | 1 |
 | S1-05 | `chore: implement Next.js edge middleware for route protection, admin role enforcement, and session refresh` | `chore` | 1 |
 | S1-06 | `feat: implement login and signup pages with email/password and Google OAuth` | `feat` | 1 |
