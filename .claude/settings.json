@@ -12,6 +12,30 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-format.sh",
+            "timeout": 30,
+            "statusMessage": "Running Prettier..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-format.sh",
+            "timeout": 30,
+            "statusMessage": "Running Prettier..."
+          }
+        ]
+      }
     ]
   }
 }

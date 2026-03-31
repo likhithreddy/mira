@@ -2,10 +2,10 @@
 
 ## Environments
 
-| Environment | URL | Trigger |
-|---|---|---|
-| Production | [miraprep.vercel.app](https://miraprep.vercel.app) | Push/merge to `main` |
-| Preview | Auto-generated per PR | Pull request opened |
+| Environment | URL                                                | Trigger              |
+| ----------- | -------------------------------------------------- | -------------------- |
+| Production  | [miraprep.vercel.app](https://miraprep.vercel.app) | Push/merge to `main` |
+| Preview     | Auto-generated per PR                              | Pull request opened  |
 
 Production deploys from `main`. Preview deployments are created automatically for every pull request by the Vercel GitHub integration, which posts the preview URL as a PR comment.
 
@@ -13,11 +13,11 @@ Production deploys from `main`. Preview deployments are created automatically fo
 
 All environment variables are configured in **Vercel → Project → Settings → Environment Variables** with both Production and Preview scopes.
 
-| Variable | Server-only | Notes |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | No | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | No | Supabase public/anon key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes | No `NEXT_PUBLIC_` prefix — server-only |
+| Variable                        | Server-only | Notes                                  |
+| ------------------------------- | ----------- | -------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | No          | Supabase project URL                   |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | No          | Supabase public/anon key               |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Yes         | No `NEXT_PUBLIC_` prefix — server-only |
 
 ## Rollback Procedure
 
