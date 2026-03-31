@@ -158,10 +158,10 @@ ALTER TABLE eval_results ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION is_admin()
 RETURNS boolean AS $$
   SELECT EXISTS (
-    SELECT 1 FROM profiles
+    SELECT 1 FROM public.profiles
     WHERE id = auth.uid() AND role = 'admin'
   );
-$$ LANGUAGE sql SECURITY DEFINER;
+$$ LANGUAGE sql SECURITY DEFINER SET search_path = '';
 
 -- profiles: Users can manage their own profile, admins can manage all
 CREATE POLICY "Users can view own profile"
@@ -321,7 +321,7 @@ BEGIN
   VALUES (NEW.id, NEW.email, 'user', false);
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
@@ -332,7 +332,7 @@ CREATE OR REPLACE FUNCTION enforce_single_default_resume()
 RETURNS trigger AS $$
 BEGIN
   IF NEW.is_default = true THEN
-    UPDATE user_resumes
+    UPDATE public.user_resumes
     SET is_default = false
     WHERE user_id = NEW.user_id
       AND id != NEW.id
@@ -340,7 +340,7 @@ BEGIN
   END IF;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 CREATE TRIGGER enforce_single_default
   BEFORE INSERT OR UPDATE ON user_resumes
@@ -353,14 +353,14 @@ CREATE OR REPLACE FUNCTION enforce_single_active_provider()
 RETURNS trigger AS $$
 BEGIN
   IF NEW.is_active = true THEN
-    UPDATE ai_providers
+    UPDATE public.ai_providers
     SET is_active = false
     WHERE id != NEW.id
       AND is_active = true;
   END IF;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
 CREATE TRIGGER enforce_single_active
   BEFORE INSERT OR UPDATE ON ai_providers
