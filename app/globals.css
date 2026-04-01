@@ -27,7 +27,7 @@
   }
 
   .dark {
-    --background: 0 0% 2%;
+    --background: 0 0% 0%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -67,13 +67,4 @@
 /* Hide Spline watermark */
 .spline-watermark-hidden canvas + div {
   display: none !important;
-}
-
-/* Hero gradient backgrounds */
-.hero-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 50%, #e8e8e8 100%);
-}
-
-.dark .hero-gradient {
-  background: #000000;
 }

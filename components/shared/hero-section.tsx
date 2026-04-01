@@ -6,7 +6,6 @@ import { SplineScene } from '@/components/ui/splite';
 import { Spotlight } from '@/components/ui/spotlight';
 import { TextRotate } from '@/components/ui/text-rotate';
 import { fadeIn } from '@/utils/animations';
-import { LandingNav } from '@/components/shared/landing-nav';
 import { InterviewOrb } from '@/components/shared/interview-orb';
 
 export function HeroSection() {
@@ -16,7 +15,7 @@ export function HeroSection() {
   return (
     <section
       data-testid="hero-section"
-      className="hero-gradient relative h-screen w-full overflow-hidden"
+      className="relative h-screen w-full overflow-hidden bg-background"
     >
       {/* SVG Filters */}
       <svg className="absolute inset-0 h-0 w-0">
@@ -36,9 +35,6 @@ export function HeroSection() {
 
       {/* Spotlight — light mode only */}
       <Spotlight className="-top-40 left-0 dark:hidden md:-top-20 md:left-60" fill="black" />
-
-      {/* Navbar — relative, inside the hero */}
-      <LandingNav />
 
       {/* Spline 3D — right half, behind content */}
       <div className="spline-watermark-hidden absolute inset-y-0 right-0 hidden w-1/2 lg:block">
