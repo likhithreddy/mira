@@ -7,9 +7,19 @@ export function InterviewOrb() {
   return (
     <Link
       href="/signup"
-      className="absolute bottom-16 right-16 z-30"
+      className="absolute bottom-16 right-16 z-30 flex flex-col items-center gap-2"
       aria-label="Get started with MIRA"
     >
+      {/* Muted CTA label — above the orb */}
+      <motion.span
+        className="text-xs font-medium text-muted-foreground/60"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.5 }}
+      >
+        Get Started
+      </motion.span>
+
       <motion.div
         className="relative flex h-20 w-20 items-center justify-center"
         whileHover={{ scale: 2 }}
