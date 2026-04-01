@@ -90,9 +90,7 @@ describe('lib/supabase/server', () => {
     const { createServerClient: mockFactory } = await import('@supabase/ssr');
     const { createServerClient } = await import('@/lib/supabase/server');
 
-    mockCookieStore.getAll.mockReturnValue([
-      { name: 'sb-access-token', value: 'test-token' },
-    ]);
+    mockCookieStore.getAll.mockReturnValue([{ name: 'sb-access-token', value: 'test-token' }]);
 
     await createServerClient();
 
@@ -123,16 +121,10 @@ describe('lib/supabase/server', () => {
 
     // Verify set was called for each cookie
     expect(mockCookieStore.set).toHaveBeenCalledTimes(2);
-    expect(mockCookieStore.set).toHaveBeenCalledWith(
-      'sb-access-token',
-      'new-token',
-      { path: '/' }
-    );
-    expect(mockCookieStore.set).toHaveBeenCalledWith(
-      'sb-refresh-token',
-      'refresh-token',
-      { path: '/' }
-    );
+    expect(mockCookieStore.set).toHaveBeenCalledWith('sb-access-token', 'new-token', { path: '/' });
+    expect(mockCookieStore.set).toHaveBeenCalledWith('sb-refresh-token', 'refresh-token', {
+      path: '/',
+    });
   });
 
   it('cookie setAll handles errors gracefully in Server Components', async () => {
@@ -152,9 +144,7 @@ describe('lib/supabase/server', () => {
 
     // Should not throw when setAll is called
     expect(() => {
-      cookiesConfig.setAll([
-        { name: 'test', value: 'value', options: {} },
-      ]);
+      cookiesConfig.setAll([{ name: 'test', value: 'value', options: {} }]);
     }).not.toThrow();
   });
 });

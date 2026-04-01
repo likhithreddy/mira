@@ -22,6 +22,7 @@
 ### Step 1: Write Failing Tests
 
 Create test files for:
+
 - `createBrowserClient()` - Returns Supabase client instance
 - `createServerClient(cookieStore)` - Returns server client instance
 - `updateSession(request)` - Returns NextResponse with cookies
@@ -95,9 +96,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
@@ -145,11 +144,11 @@ Run via Supabase MCP `generate_typescript_types` tool to get types for all 10 ta
 
 ## Acceptance Criteria Mapping
 
-| AC | Implementation |
-|----|----------------|
-| `@supabase/ssr` and `@supabase/supabase-js` installed | Already in package.json |
-| `lib/supabase/client.ts` exports `createBrowserClient()` | Step 2 |
-| `lib/supabase/server.ts` exports `createServerClient(cookieStore)` | Step 3 |
-| `lib/supabase/middleware.ts` exports `updateSession()` | Step 4 |
-| TypeScript types generated | Step 5 |
-| No runtime errors | Step 6 verification |
+| AC                                                                 | Implementation          |
+| ------------------------------------------------------------------ | ----------------------- |
+| `@supabase/ssr` and `@supabase/supabase-js` installed              | Already in package.json |
+| `lib/supabase/client.ts` exports `createBrowserClient()`           | Step 2                  |
+| `lib/supabase/server.ts` exports `createServerClient(cookieStore)` | Step 3                  |
+| `lib/supabase/middleware.ts` exports `updateSession()`             | Step 4                  |
+| TypeScript types generated                                         | Step 5                  |
+| No runtime errors                                                  | Step 6 verification     |

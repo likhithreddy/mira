@@ -19,11 +19,13 @@ This issue requires wiring `@supabase/ssr` into the project for browser, server,
 ### Environment Variables (from .env.example)
 
 Server-side only:
+
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 
 Client-side safe:
+
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
@@ -49,24 +51,28 @@ All tables have RLS enabled with appropriate policies.
 ### 1. Browser Client (`lib/supabase/client.ts`)
 
 Export `createBrowserClient()` using:
+
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 ### 2. Server Client (`lib/supabase/server.ts`)
 
 Export `createServerClient(cookieStore)` using server-only vars:
+
 - Works in Server Components
 - Works in API route handlers
 
 ### 3. Middleware Utilities (`lib/supabase/middleware.ts`)
 
 Export `updateSession(request: NextRequest): NextResponse`:
+
 - Refreshes session token
 - Writes token back to response cookies
 
 ### 4. TypeScript Types (`types/supabase.ts`)
 
 Generated via `npx supabase gen types typescript`:
+
 - Must reflect all 10 tables
 - Must be committed to repository
 
@@ -78,6 +84,7 @@ Generated via `npx supabase gen types typescript`:
 ## Test Strategy
 
 Unit tests with mocked cookie stores and requests to verify:
+
 - Client instances are created without throwing
 - Server client works with mock cookie store
 - Middleware returns NextResponse with cookie headers

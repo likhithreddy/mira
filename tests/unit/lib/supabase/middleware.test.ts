@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Create mock cookies and response objects
 const mockCookies = {
-  getAll: vi.fn(() => []),
+  getAll: vi.fn((): { name: string; value: string }[] => []),
   set: vi.fn(),
 };
 
@@ -141,8 +141,7 @@ describe('lib/supabase/middleware', () => {
     await updateSession(request);
 
     // Extract the cookies config from the mock call
-    const callArgs = (createServerClient as ReturnType<typeof vi.fn>).mock
-      .calls[0];
+    const callArgs = (createServerClient as ReturnType<typeof vi.fn>).mock.calls[0];
     const cookiesConfig = callArgs[2].cookies;
 
     // Reset mocks to track setAll calls
@@ -151,9 +150,7 @@ describe('lib/supabase/middleware', () => {
     (NextResponse.next as ReturnType<typeof vi.fn>).mockClear();
 
     // Call setAll with test cookies
-    const testCookies = [
-      { name: 'sb-access-token', value: 'new-token', options: { path: '/' } },
-    ];
+    const testCookies = [{ name: 'sb-access-token', value: 'new-token', options: { path: '/' } }];
     cookiesConfig.setAll(testCookies);
 
     // Verify request.cookies.set was called
@@ -163,32 +160,25 @@ describe('lib/supabase/middleware', () => {
     expect(NextResponse.next).toHaveBeenCalled();
 
     // Verify response.cookies.set was called
-    expect(mockResponseCookies.set).toHaveBeenCalledWith(
-      'sb-access-token',
-      'new-token',
-      { path: '/' }
-    );
+    expect(mockResponseCookies.set).toHaveBeenCalledWith('sb-access-token', 'new-token', {
+      path: '/',
+    });
   });
 
   it('cookie getAll returns cookies from request', async () => {
     const { createServerClient } = await import('@supabase/ssr');
     const { updateSession } = await import('@/lib/supabase/middleware');
 
-    mockCookies.getAll.mockReturnValue([
-      { name: 'sb-access-token', value: 'existing-token' },
-    ]);
+    mockCookies.getAll.mockReturnValue([{ name: 'sb-access-token', value: 'existing-token' }]);
 
     const request = await createMockRequest();
     await updateSession(request);
 
     // Extract the cookies config from the mock call
-    const callArgs = (createServerClient as ReturnType<typeof vi.fn>).mock
-      .calls[0];
+    const callArgs = (createServerClient as ReturnType<typeof vi.fn>).mock.calls[0];
     const cookiesConfig = callArgs[2].cookies;
 
     const cookies = cookiesConfig.getAll();
-    expect(cookies).toEqual([
-      { name: 'sb-access-token', value: 'existing-token' },
-    ]);
+    expect(cookies).toEqual([{ name: 'sb-access-token', value: 'existing-token' }]);
   });
 });

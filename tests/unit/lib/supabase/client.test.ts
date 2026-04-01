@@ -44,10 +44,7 @@ describe('lib/supabase/client', () => {
 
     createBrowserClient();
 
-    expect(mockFactory).toHaveBeenCalledWith(
-      'https://test.supabase.co',
-      'test-anon-key'
-    );
+    expect(mockFactory).toHaveBeenCalledWith('https://test.supabase.co', 'test-anon-key');
   });
 
   it('createBrowserClient() can be called multiple times without error', async () => {
