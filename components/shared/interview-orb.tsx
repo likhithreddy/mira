@@ -19,9 +19,9 @@ export function InterviewOrb() {
         <div className="absolute inset-0 rounded-full border border-foreground/20" />
 
         {/* Inner orb with theme-aware shadow */}
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background shadow-[0_0_20px_rgba(0,0,0,0.3)] transition-colors dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground shadow-[0_0_20px_rgba(0,0,0,0.3)] transition-colors dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
           <svg
-            className="h-5 w-5 text-foreground"
+            className="h-5 w-5 text-background"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -52,8 +52,7 @@ export function InterviewOrb() {
           </defs>
           <text className="fill-foreground/60 text-[8px] font-medium">
             <textPath href="#orb-circle" startOffset="0%">
-              &bull; MIRA &bull; Practice Now &bull; AI Feedback &bull; Ace Interviews &bull; Get
-              Hired
+              &bull; Practice Now &bull; AI Feedback &bull; Ace Interviews &bull; Get Hired &bull;
             </textPath>
           </text>
         </motion.svg>

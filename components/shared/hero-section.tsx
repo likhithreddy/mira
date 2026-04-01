@@ -33,7 +33,8 @@ export function HeroSection() {
         </defs>
       </svg>
 
-      <Spotlight className="-top-40 left-0 md:-top-20 md:left-60" fill="white" />
+      {/* Spotlight — light mode only */}
+      <Spotlight className="-top-40 left-0 dark:hidden md:-top-20 md:left-60" fill="black" />
 
       {/* Navbar — relative, inside the hero */}
       <LandingNav />
