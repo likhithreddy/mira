@@ -63,7 +63,7 @@ export function HeroSection() {
           {/* Rotating tagline */}
           <div className="mt-6 flex items-center font-body text-2xl font-light text-muted-foreground md:text-3xl lg:text-4xl">
             <LayoutGroup>
-              <motion.p className="flex whitespace-pre" layout>
+              <motion.div className="flex whitespace-pre" layout>
                 <motion.span
                   className="pt-0.5 md:pt-1"
                   layout
@@ -89,7 +89,7 @@ export function HeroSection() {
                   transition={{ type: 'spring', damping: 30, stiffness: 400 }}
                   rotationInterval={2500}
                 />
-              </motion.p>
+              </motion.div>
             </LayoutGroup>
           </div>
 
