@@ -16,7 +16,7 @@ vi.mock('@supabase/ssr', () => ({
 
 // Mock next/headers
 const mockCookieStore = {
-  getAll: vi.fn(() => []),
+  getAll: vi.fn((): { name: string; value: string }[] => []),
   set: vi.fn(),
 };
 
@@ -102,5 +102,59 @@ describe('lib/supabase/server', () => {
 
     const cookies = cookiesConfig.getAll();
     expect(cookies).toEqual([{ name: 'sb-access-token', value: 'test-token' }]);
+  });
+
+  it('cookie setAll sets cookies on cookie store', async () => {
+    const { createServerClient: mockFactory } = await import('@supabase/ssr');
+    const { createServerClient } = await import('@/lib/supabase/server');
+
+    await createServerClient();
+
+    // Extract the cookies config from the mock call
+    const callArgs = (mockFactory as ReturnType<typeof vi.fn>).mock.calls[0];
+    const cookiesConfig = callArgs[2].cookies;
+
+    // Call setAll with test cookies
+    const testCookies = [
+      { name: 'sb-access-token', value: 'new-token', options: { path: '/' } },
+      { name: 'sb-refresh-token', value: 'refresh-token', options: { path: '/' } },
+    ];
+    cookiesConfig.setAll(testCookies);
+
+    // Verify set was called for each cookie
+    expect(mockCookieStore.set).toHaveBeenCalledTimes(2);
+    expect(mockCookieStore.set).toHaveBeenCalledWith(
+      'sb-access-token',
+      'new-token',
+      { path: '/' }
+    );
+    expect(mockCookieStore.set).toHaveBeenCalledWith(
+      'sb-refresh-token',
+      'refresh-token',
+      { path: '/' }
+    );
+  });
+
+  it('cookie setAll handles errors gracefully in Server Components', async () => {
+    const { createServerClient: mockFactory } = await import('@supabase/ssr');
+    const { createServerClient } = await import('@/lib/supabase/server');
+
+    // Make set throw an error (simulating Server Component context)
+    mockCookieStore.set.mockImplementation(() => {
+      throw new Error('Cookies can only be modified in a Server Action or Route Handler');
+    });
+
+    await createServerClient();
+
+    // Extract the cookies config from the mock call
+    const callArgs = (mockFactory as ReturnType<typeof vi.fn>).mock.calls[0];
+    const cookiesConfig = callArgs[2].cookies;
+
+    // Should not throw when setAll is called
+    expect(() => {
+      cookiesConfig.setAll([
+        { name: 'test', value: 'value', options: {} },
+      ]);
+    }).not.toThrow();
   });
 });
