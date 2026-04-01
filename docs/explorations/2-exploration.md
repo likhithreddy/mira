@@ -116,19 +116,19 @@ This issue requires creating the full Supabase database schema including 10 tabl
 
 ## RLS Policies
 
-| Table | Access | Condition |
-|-------|--------|-----------|
-| profiles | User: all ops | auth.uid() = id |
-| profiles | Admin: all ops | auth.uid() = id OR role = 'admin' |
-| user_resumes | User: all ops | auth.uid() = user_id |
-| sessions | User: all ops | auth.uid() = user_id |
-| transcripts | User: all ops | auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id) |
-| reports | User: all ops | auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id) |
-| session_feedback | User: all ops | auth.uid() = user_id |
-| eval_results | Admin: SELECT only | role = 'admin' |
-| ai_providers | Admin: all ops | role = 'admin' |
-| ai_provider_keys | Admin: all ops | role = 'admin' |
-| ai_call_logs | Admin: SELECT only | role = 'admin' |
+| Table            | Access             | Condition                                                         |
+| ---------------- | ------------------ | ----------------------------------------------------------------- |
+| profiles         | User: all ops      | auth.uid() = id                                                   |
+| profiles         | Admin: all ops     | auth.uid() = id OR role = 'admin'                                 |
+| user_resumes     | User: all ops      | auth.uid() = user_id                                              |
+| sessions         | User: all ops      | auth.uid() = user_id                                              |
+| transcripts      | User: all ops      | auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id) |
+| reports          | User: all ops      | auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id) |
+| session_feedback | User: all ops      | auth.uid() = user_id                                              |
+| eval_results     | Admin: SELECT only | role = 'admin'                                                    |
+| ai_providers     | Admin: all ops     | role = 'admin'                                                    |
+| ai_provider_keys | Admin: all ops     | role = 'admin'                                                    |
+| ai_call_logs     | Admin: SELECT only | role = 'admin'                                                    |
 
 ## Triggers (3 total)
 
@@ -144,5 +144,6 @@ This issue requires creating the full Supabase database schema including 10 tabl
 ## Migration File Strategy
 
 Per DATABASE.md rules:
+
 - Single migration file: `2_create_full_schema.sql`
 - Contains: extension, all tables, all RLS policies, all triggers, storage bucket

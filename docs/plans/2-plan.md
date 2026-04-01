@@ -6,8 +6,8 @@ Create the full Supabase database schema with 10 tables, RLS policies, triggers,
 
 ## Files to Create/Modify
 
-| File | Action | Purpose |
-|------|--------|---------|
+| File                                           | Action | Purpose                          |
+| ---------------------------------------------- | ------ | -------------------------------- |
 | `supabase/migrations/2_create_full_schema.sql` | Create | Single migration with all schema |
 
 ## Implementation Steps
@@ -15,6 +15,7 @@ Create the full Supabase database schema with 10 tables, RLS policies, triggers,
 ### Step 1: Create Migration File Structure
 
 Create `supabase/migrations/2_create_full_schema.sql` with sections:
+
 1. Enable pgcrypto extension
 2. Create tables (in dependency order)
 3. Enable RLS on all tables
@@ -38,6 +39,7 @@ Create `supabase/migrations/2_create_full_schema.sql` with sections:
 ### Step 3: RLS Policies
 
 For each table:
+
 - Enable RLS: `ALTER TABLE <table> ENABLE ROW LEVEL SECURITY;`
 - Create policies for SELECT, INSERT, UPDATE, DELETE as needed
 
@@ -79,6 +81,7 @@ For each table:
 ## Test Verification
 
 After migration, verify:
+
 1. Insert auth.users -> auto-creates profiles
 2. Set is_default on second resume -> first becomes false
 3. Set is_active on second provider -> first becomes false
