@@ -12,7 +12,7 @@ export function AboutSection() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section id="about" className="bg-background py-24 lg:py-32">
+    <section id="about" className="scroll-mt-20 bg-background py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
           {/* Left - mission copy */}
