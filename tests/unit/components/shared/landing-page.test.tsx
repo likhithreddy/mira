@@ -75,8 +75,9 @@ describe('Landing Page', () => {
 
   it('has "Get Started Free" link pointing to /signup', () => {
     render(<HomePage />);
-    const ctaLink = screen.getByRole('link', { name: /get started free/i });
-    expect(ctaLink).toHaveAttribute('href', '/signup');
+    const ctaLinks = screen.getAllByRole('link', { name: /get started free/i });
+    expect(ctaLinks.length).toBeGreaterThan(0);
+    expect(ctaLinks[0]).toHaveAttribute('href', '/signup');
   });
 
   it('has "Sign In" link pointing to /login', () => {
