@@ -33,10 +33,10 @@ export function HeroSection() {
         </defs>
       </svg>
 
-      {/* Spotlight — light mode only */}
+      {/* Spotlight - light mode only */}
       <Spotlight className="-top-40 left-0 dark:hidden md:-top-20 md:left-60" fill="black" />
 
-      {/* Spline 3D — right half, behind content */}
+      {/* Spline 3D - right half, behind content */}
       <div className="spline-watermark-hidden absolute inset-y-0 right-0 hidden w-1/2 lg:block">
         <SplineScene
           scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
@@ -44,7 +44,7 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Hero content — vertically centered, left half */}
+      {/* Hero content - vertically centered, left half */}
       <motion.main
         className="absolute inset-y-0 left-0 z-20 flex w-full items-center px-8 lg:w-1/2 lg:px-12"
         variants={heroVariants}
@@ -150,7 +150,7 @@ export function HeroSection() {
         </div>
       </motion.main>
 
-      {/* Interview orb — bottom right */}
+      {/* Interview orb - bottom right */}
       <InterviewOrb />
     </section>
   );

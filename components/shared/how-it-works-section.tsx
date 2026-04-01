@@ -23,21 +23,21 @@ const steps = [
     icon: Mic,
     title: 'Speak Your Answers',
     description:
-      'Answer each question out loud. MIRA transcribes your speech in real time — no typing, no shortcuts. Just you and the mic.',
+      'Answer each question out loud. MIRA transcribes your speech in real time - no typing, no shortcuts. Just you and the mic.',
   },
   {
     number: '04',
     icon: MessageSquare,
     title: 'Get Pushed Back',
     description:
-      'MIRA evaluates each answer and decides whether to probe deeper. If your answer is thin, it follows up — just like a real interviewer would.',
+      'MIRA evaluates each answer and decides whether to probe deeper. If your answer is thin, it follows up - just like a real interviewer would.',
   },
   {
     number: '05',
     icon: BarChart3,
     title: 'Read Your Report',
     description:
-      'When the session ends, you get a structured feedback report — strengths, gaps, and a clear direction for what to improve.',
+      'When the session ends, you get a structured feedback report - strengths, gaps, and a clear direction for what to improve.',
   },
 ] as const;
 
@@ -47,7 +47,7 @@ export function HowItWorksSection() {
   return (
     <section id="how-it-works" className="bg-background py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section header — centered */}
+        {/* Section header - centered */}
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -66,9 +66,9 @@ export function HowItWorksSection() {
           </p>
         </motion.div>
 
-        {/* Steps — horizontal on desktop, vertical on mobile */}
+        {/* Steps - horizontal on desktop, vertical on mobile */}
         <div className="relative">
-          {/* Connecting line — desktop only, top-5 = center of h-10 icon */}
+          {/* Connecting line - desktop only, top-5 = center of h-10 icon */}
           <motion.div
             className="absolute left-0 right-0 top-5 hidden h-px bg-border lg:block"
             initial={shouldReduceMotion ? {} : { scaleX: 0 }}
@@ -88,12 +88,12 @@ export function HowItWorksSection() {
                 transition={{ duration: 0.4, ease: 'easeOut', delay: index * 0.1 }}
                 className="relative flex flex-col"
               >
-                {/* Vertical line — mobile only */}
+                {/* Vertical line - mobile only */}
                 {index < steps.length - 1 && (
                   <div className="absolute left-5 top-12 h-full w-px bg-border lg:hidden" />
                 )}
 
-                {/* Step dot — centered horizontally on desktop */}
+                {/* Step dot - centered horizontally on desktop */}
                 <div className="relative z-10 mb-6 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background lg:mx-auto">
                   <step.icon className="h-4 w-4 text-foreground/60" />
                 </div>

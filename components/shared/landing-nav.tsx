@@ -44,7 +44,7 @@ export function LandingNav() {
           </Link>
         </motion.div>
 
-        {/* Center nav links — desktop */}
+        {/* Center nav links - desktop */}
         <nav className="pointer-events-auto absolute left-1/2 hidden -translate-x-1/2 items-center space-x-1 md:flex">
           {navLinks.map((link) => (
             <a
@@ -57,7 +57,7 @@ export function LandingNav() {
           ))}
         </nav>
 
-        {/* Right zone: theme toggle + gooey sign in — desktop */}
+        {/* Right zone: theme toggle + gooey sign in - desktop */}
         <div className="pointer-events-auto hidden items-center md:flex">
           <AnimatedThemeToggler className="mr-6 cursor-pointer text-foreground/70 transition-colors hover:text-foreground" />
 

@@ -9,13 +9,13 @@ const features = [
     icon: Brain,
     title: 'Questions Built for Your Role',
     description:
-      'Upload your resume and the job description. MIRA generates 8–12 questions tailored specifically to your experience and the role — not generic filler.',
+      'Upload your resume and the job description. MIRA generates 8–12 questions tailored specifically to your experience and the role - not generic filler.',
   },
   {
     icon: Mic,
     title: 'Practice Out Loud',
     description:
-      'Answer every question by speaking, exactly like a real interview. No typing, no shortcuts — your voice is what gets evaluated.',
+      'Answer every question by speaking, exactly like a real interview. No typing, no shortcuts - your voice is what gets evaluated.',
   },
   {
     icon: MessageSquare,
@@ -29,7 +29,7 @@ const signatureFeature = {
   icon: FileText,
   title: 'A Report That Actually Helps',
   description:
-    'After each session you get a structured breakdown — what you said well, where you were vague, which answers missed the mark, and what to work on before the real interview. Not a score. A direction.',
+    'After each session you get a structured breakdown - what you said well, where you were vague, which answers missed the mark, and what to work on before the real interview. Not a score. A direction.',
 };
 
 const staggerContainer = {
@@ -53,7 +53,7 @@ export function FeaturesSection() {
   return (
     <section id="features" className="bg-background py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section header — left aligned */}
+        {/* Section header - left aligned */}
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

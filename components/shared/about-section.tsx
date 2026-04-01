@@ -15,7 +15,7 @@ export function AboutSection() {
     <section id="about" className="bg-background py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
-          {/* Left — mission copy */}
+          {/* Left - mission copy */}
           <motion.div
             initial={shouldReduceMotion ? {} : { opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -31,7 +31,7 @@ export function AboutSection() {
             <div className="space-y-5 font-body text-base leading-relaxed text-muted-foreground">
               <p>
                 Most people prepare for interviews by re-reading their notes. That is not how
-                interviews work. Interviews are spoken, pressured, and reactive — the interviewer
+                interviews work. Interviews are spoken, pressured, and reactive - the interviewer
                 can ask anything, and you have seconds to respond clearly.
               </p>
               <p>
@@ -41,13 +41,13 @@ export function AboutSection() {
               </p>
               <p>
                 MIRA gives everyone that. You upload your resume, tell it what role you are
-                targeting, and it does the rest — questions, follow-ups, and a report that tells you
+                targeting, and it does the rest - questions, follow-ups, and a report that tells you
                 exactly what to fix before the real thing.
               </p>
             </div>
           </motion.div>
 
-          {/* Right — team */}
+          {/* Right - team */}
           <motion.div
             initial={shouldReduceMotion ? {} : { opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
