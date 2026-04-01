@@ -2,12 +2,17 @@
 
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
+import { FloatingPaths } from '@/components/ui/background-paths';
 
 export function CtaSection() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section className="border-t border-border bg-background py-24 lg:py-32">
+    <section className="relative w-full overflow-hidden border-t border-border bg-background py-24 lg:py-32">
+      {/* Background paths */}
+      <FloatingPaths position={1} />
+      <FloatingPaths position={-1} />
+
       {/* Scoped gooey filter */}
       <svg className="absolute h-0 w-0">
         <defs>
@@ -24,7 +29,7 @@ export function CtaSection() {
         </defs>
       </svg>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -25,14 +25,14 @@ export function LandingNav() {
   }, []);
 
   return (
-    <header
-      className={`pointer-events-none fixed top-0 z-50 w-full transition-all duration-300 ease-out ${
-        scrolled
-          ? 'border-b border-border/30 bg-background/70 py-3 backdrop-blur-md'
-          : 'bg-transparent py-6'
-      }`}
-    >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
+    <header className="pointer-events-none fixed top-0 z-50 w-full">
+      <div
+        className={`mx-auto flex items-center justify-between border transition-all duration-500 ease-in-out ${
+          scrolled
+            ? 'mt-3 max-w-3xl rounded-full border-foreground/10 bg-background/20 px-6 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl dark:shadow-[0_8px_32px_rgba(255,255,255,0.04)]'
+            : 'mt-0 max-w-full rounded-none border-transparent bg-transparent px-6 py-6'
+        }`}
+      >
         {/* Logo */}
         <motion.div
           className="pointer-events-auto flex cursor-pointer items-center"

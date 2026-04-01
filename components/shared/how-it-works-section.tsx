@@ -45,7 +45,7 @@ export function HowItWorksSection() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section id="how-it-works" className="bg-muted/30 py-24 lg:py-32">
+    <section id="how-it-works" className="bg-background py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header — centered */}
         <motion.div
@@ -68,9 +68,9 @@ export function HowItWorksSection() {
 
         {/* Steps — horizontal on desktop, vertical on mobile */}
         <div className="relative">
-          {/* Connecting line — desktop only */}
+          {/* Connecting line — desktop only, top-5 = center of h-10 icon */}
           <motion.div
-            className="absolute left-0 right-0 top-10 hidden h-px bg-border lg:block"
+            className="absolute left-0 right-0 top-5 hidden h-px bg-border lg:block"
             initial={shouldReduceMotion ? {} : { scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
@@ -86,27 +86,27 @@ export function HowItWorksSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, ease: 'easeOut', delay: index * 0.1 }}
-                className="relative flex flex-col lg:items-start"
+                className="relative flex flex-col"
               >
                 {/* Vertical line — mobile only */}
                 {index < steps.length - 1 && (
                   <div className="absolute left-5 top-12 h-full w-px bg-border lg:hidden" />
                 )}
 
-                {/* Step dot on the line */}
-                <div className="relative z-10 mb-6 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background">
+                {/* Step dot — centered horizontally on desktop */}
+                <div className="relative z-10 mb-6 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background lg:mx-auto">
                   <step.icon className="h-4 w-4 text-foreground/60" />
                 </div>
 
                 {/* Decorative number */}
-                <span className="mb-2 font-heading text-7xl font-bold leading-none text-foreground/5 lg:text-8xl">
+                <span className="mb-2 font-heading text-7xl font-bold leading-none text-foreground/5 lg:mx-auto lg:text-8xl">
                   {step.number}
                 </span>
 
-                <h3 className="mb-2 font-heading text-lg font-bold text-foreground">
+                <h3 className="mb-2 font-heading text-lg font-bold text-foreground lg:text-center">
                   {step.title}
                 </h3>
-                <p className="font-body text-sm leading-relaxed text-muted-foreground">
+                <p className="font-body text-sm leading-relaxed text-muted-foreground lg:text-center">
                   {step.description}
                 </p>
               </motion.div>
