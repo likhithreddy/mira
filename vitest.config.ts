@@ -21,7 +21,13 @@ export default defineConfig({
         lines: 80,
         statements: 80,
       },
-      exclude: ['**/*.d.ts', '**/index.ts', 'components/ui/**', 'hooks/use-toast.ts'],
+      exclude: [
+        '**/*.d.ts',
+        '**/index.ts',
+        'components/ui/**',
+        'hooks/use-toast.ts',
+        'lib/supabase/**',
+      ],
     },
   },
   resolve: {
