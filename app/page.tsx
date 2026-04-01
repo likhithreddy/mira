@@ -1,7 +1,11 @@
+import { HeroSection } from '@/components/shared/hero-section';
+import { BrowserBanner } from '@/components/shared/browser-banner';
+
 export default function HomePage() {
   return (
-    <main>
-      <h1>MIRA</h1>
+    <main className="h-screen overflow-hidden">
+      <HeroSection />
+      <BrowserBanner />
     </main>
   );
 }

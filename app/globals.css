@@ -27,7 +27,7 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 0 0% 2%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -56,4 +56,24 @@
   body {
     @apply bg-background font-body text-foreground;
   }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Hide Spline watermark */
+.spline-watermark-hidden canvas + div {
+  display: none !important;
+}
+
+/* Hero gradient backgrounds */
+.hero-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 50%, #e8e8e8 100%);
+}
+
+.dark .hero-gradient {
+  background: linear-gradient(135deg, #000000 0%, #111111 50%, #1a1a1a 100%);
 }

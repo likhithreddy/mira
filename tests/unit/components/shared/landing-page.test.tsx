@@ -1,6 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// Mock IntersectionObserver for Framer Motion viewport detection
+const mockIntersectionObserver = vi.fn();
+mockIntersectionObserver.mockReturnValue({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+});
+vi.stubGlobal('IntersectionObserver', mockIntersectionObserver);
+
 // Mock Spline to avoid loading 3D scene in tests
 vi.mock('@splinetool/react-spline', () => ({
   __esModule: true,
@@ -38,7 +47,8 @@ describe('Landing Page', () => {
 
   it('renders the hero headline', () => {
     render(<HomePage />);
-    expect(screen.getByText('MIRA')).toBeVisible();
+    const heading = screen.getByRole('heading', { level: 1, name: 'MIRA' });
+    expect(heading).toBeInTheDocument();
   });
 
   it('renders single-column layout at 375px without horizontal overflow', () => {
