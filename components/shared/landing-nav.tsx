@@ -18,7 +18,7 @@ export function LandingNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="relative z-20 flex items-center justify-between p-6">
+    <header className="relative z-50 flex items-center justify-between p-6">
       {/* Logo */}
       <motion.div
         className="flex cursor-pointer items-center"
@@ -30,8 +30,8 @@ export function LandingNav() {
         </Link>
       </motion.div>
 
-      {/* Center nav links — desktop */}
-      <nav className="hidden items-center space-x-2 md:flex">
+      {/* Center nav links — desktop, truly centered via absolute positioning */}
+      <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center space-x-2 md:flex">
         {navLinks.map((link) => (
           <a
             key={link.label}
