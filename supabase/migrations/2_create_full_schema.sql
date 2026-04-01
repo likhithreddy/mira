@@ -44,8 +44,8 @@ CREATE TABLE sessions (
   jd_text text NOT NULL,
   resume_text text NOT NULL,
   jd_role_title text,
-  status text DEFAULT 'in_progress',
-  overall_score numeric(3,2)
+  status text DEFAULT 'in_progress' CHECK (status IN ('in_progress', 'completed', 'abandoned')),
+  overall_score numeric(4,2)
 );
 
 -- 4. transcripts - Conversation turns
@@ -64,7 +64,7 @@ CREATE TABLE transcripts (
 CREATE TABLE reports (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id uuid NOT NULL UNIQUE REFERENCES sessions(id) ON DELETE CASCADE,
-  overall_score numeric(3,2) NOT NULL,
+  overall_score numeric(4,2) NOT NULL,
   top_strengths text[] NOT NULL,
   top_improvements text[] NOT NULL,
   role_alignment_summary text NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE ai_call_logs (
 CREATE TABLE eval_results (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id uuid NOT NULL UNIQUE REFERENCES sessions(id) ON DELETE CASCADE,
-  overall_eval_score numeric(3,2) NOT NULL,
+  overall_eval_score numeric(4,2) NOT NULL,
   question_quality_score smallint NOT NULL,
   question_quality_rationale text NOT NULL,
   calibration_score smallint NOT NULL,
@@ -134,6 +134,21 @@ CREATE TABLE eval_results (
   provider_used text NOT NULL,
   created_at timestamptz DEFAULT now()
 );
+
+-- ============================================================================
+-- INDEXES - Foreign key columns for RLS subquery performance
+-- ============================================================================
+
+CREATE INDEX idx_user_resumes_user_id ON user_resumes(user_id);
+CREATE INDEX idx_sessions_user_id ON sessions(user_id);
+CREATE INDEX idx_sessions_resume_id ON sessions(resume_id);
+CREATE INDEX idx_transcripts_session_id ON transcripts(session_id);
+CREATE INDEX idx_reports_session_id ON reports(session_id);
+CREATE INDEX idx_session_feedback_session_id ON session_feedback(session_id);
+CREATE INDEX idx_session_feedback_user_id ON session_feedback(user_id);
+CREATE INDEX idx_ai_provider_keys_provider_id ON ai_provider_keys(provider_id);
+CREATE INDEX idx_ai_call_logs_provider_id ON ai_call_logs(provider_id);
+CREATE INDEX idx_eval_results_session_id ON eval_results(session_id);
 
 -- ============================================================================
 -- ROW LEVEL SECURITY - Enable on all tables
@@ -166,104 +181,104 @@ $$ LANGUAGE sql SECURITY DEFINER SET search_path = '';
 -- profiles: Users can manage their own profile, admins can manage all
 CREATE POLICY "Users can view own profile"
   ON profiles FOR SELECT
-  USING (auth.uid() = id OR is_admin());
+  USING ((select auth.uid()) = id OR is_admin());
 
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
-  USING (auth.uid() = id OR is_admin());
+  USING ((select auth.uid()) = id OR is_admin());
 
 CREATE POLICY "Users can insert own profile"
   ON profiles FOR INSERT
-  WITH CHECK (auth.uid() = id);
+  WITH CHECK ((select auth.uid()) = id);
 
 CREATE POLICY "Users can delete own profile"
   ON profiles FOR DELETE
-  USING (auth.uid() = id OR is_admin());
+  USING ((select auth.uid()) = id OR is_admin());
 
 -- user_resumes: Users can only access their own resumes
 CREATE POLICY "Users can view own resumes"
   ON user_resumes FOR SELECT
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can insert own resumes"
   ON user_resumes FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can update own resumes"
   ON user_resumes FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can delete own resumes"
   ON user_resumes FOR DELETE
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 -- sessions: Users can only access their own sessions
 CREATE POLICY "Users can view own sessions"
   ON sessions FOR SELECT
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can insert own sessions"
   ON sessions FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can update own sessions"
   ON sessions FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can delete own sessions"
   ON sessions FOR DELETE
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 -- transcripts: Users can access transcripts for their own sessions
 CREATE POLICY "Users can view own transcripts"
   ON transcripts FOR SELECT
-  USING (auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id));
+  USING ((select auth.uid()) = (SELECT user_id FROM sessions WHERE id = session_id));
 
 CREATE POLICY "Users can insert own transcripts"
   ON transcripts FOR INSERT
-  WITH CHECK (auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id));
+  WITH CHECK ((select auth.uid()) = (SELECT user_id FROM sessions WHERE id = session_id));
 
 CREATE POLICY "Users can update own transcripts"
   ON transcripts FOR UPDATE
-  USING (auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id));
+  USING ((select auth.uid()) = (SELECT user_id FROM sessions WHERE id = session_id));
 
 CREATE POLICY "Users can delete own transcripts"
   ON transcripts FOR DELETE
-  USING (auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id));
+  USING ((select auth.uid()) = (SELECT user_id FROM sessions WHERE id = session_id));
 
 -- reports: Users can access reports for their own sessions
 CREATE POLICY "Users can view own reports"
   ON reports FOR SELECT
-  USING (auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id));
+  USING ((select auth.uid()) = (SELECT user_id FROM sessions WHERE id = session_id));
 
 CREATE POLICY "Users can insert own reports"
   ON reports FOR INSERT
-  WITH CHECK (auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id));
+  WITH CHECK ((select auth.uid()) = (SELECT user_id FROM sessions WHERE id = session_id));
 
 CREATE POLICY "Users can update own reports"
   ON reports FOR UPDATE
-  USING (auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id));
+  USING ((select auth.uid()) = (SELECT user_id FROM sessions WHERE id = session_id));
 
 CREATE POLICY "Users can delete own reports"
   ON reports FOR DELETE
-  USING (auth.uid() = (SELECT user_id FROM sessions WHERE id = session_id));
+  USING ((select auth.uid()) = (SELECT user_id FROM sessions WHERE id = session_id));
 
 -- session_feedback: Users can only access their own feedback
 CREATE POLICY "Users can view own feedback"
   ON session_feedback FOR SELECT
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can insert own feedback"
   ON session_feedback FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can update own feedback"
   ON session_feedback FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 CREATE POLICY "Users can delete own feedback"
   ON session_feedback FOR DELETE
-  USING (auth.uid() = user_id);
+  USING ((select auth.uid()) = user_id);
 
 -- ai_providers: Admin only
 CREATE POLICY "Admins can view providers"
@@ -328,16 +343,15 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
 -- 2. enforce_single_default: Ensures only one default resume per user
+-- Note: Trigger WHEN clause already filters for NEW.is_default = true
 CREATE OR REPLACE FUNCTION enforce_single_default_resume()
 RETURNS trigger AS $$
 BEGIN
-  IF NEW.is_default = true THEN
-    UPDATE public.user_resumes
-    SET is_default = false
-    WHERE user_id = NEW.user_id
-      AND id != NEW.id
-      AND is_default = true;
-  END IF;
+  UPDATE public.user_resumes
+  SET is_default = false
+  WHERE user_id = NEW.user_id
+    AND id != NEW.id
+    AND is_default = true;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
@@ -349,15 +363,14 @@ CREATE TRIGGER enforce_single_default
   EXECUTE FUNCTION enforce_single_default_resume();
 
 -- 3. enforce_single_active_provider: Ensures only one active provider
+-- Note: Trigger WHEN clause already filters for NEW.is_active = true
 CREATE OR REPLACE FUNCTION enforce_single_active_provider()
 RETURNS trigger AS $$
 BEGIN
-  IF NEW.is_active = true THEN
-    UPDATE public.ai_providers
-    SET is_active = false
-    WHERE id != NEW.id
-      AND is_active = true;
-  END IF;
+  UPDATE public.ai_providers
+  SET is_active = false
+  WHERE id != NEW.id
+    AND is_active = true;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
@@ -382,26 +395,26 @@ CREATE POLICY "Users can upload to own folder"
   ON storage.objects FOR INSERT
   WITH CHECK (
     bucket_id = 'resumes'
-    AND (storage.foldername(name))[1] = auth.uid()::text
+    AND (storage.foldername(name))[1] = (select auth.uid())::text
   );
 
 CREATE POLICY "Users can view own files"
   ON storage.objects FOR SELECT
   USING (
     bucket_id = 'resumes'
-    AND (storage.foldername(name))[1] = auth.uid()::text
+    AND (storage.foldername(name))[1] = (select auth.uid())::text
   );
 
 CREATE POLICY "Users can update own files"
   ON storage.objects FOR UPDATE
   USING (
     bucket_id = 'resumes'
-    AND (storage.foldername(name))[1] = auth.uid()::text
+    AND (storage.foldername(name))[1] = (select auth.uid())::text
   );
 
 CREATE POLICY "Users can delete own files"
   ON storage.objects FOR DELETE
   USING (
     bucket_id = 'resumes'
-    AND (storage.foldername(name))[1] = auth.uid()::text
+    AND (storage.foldername(name))[1] = (select auth.uid())::text
   );
