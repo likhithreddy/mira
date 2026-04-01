@@ -36,8 +36,18 @@ export function HeroSection() {
       {/* Spotlight - light mode only */}
       <Spotlight className="-top-40 left-0 dark:hidden md:-top-20 md:left-60" fill="black" />
 
-      {/* Spline 3D - right half, behind content */}
-      <div className="spline-watermark-hidden absolute inset-y-0 right-0 hidden w-1/2 lg:block">
+      {/* Spline 3D - right side, wider with fade-out on left edge */}
+      <div
+        className="spline-watermark-hidden absolute inset-y-0 right-0 hidden w-[60%] lg:block"
+        style={{
+          maskImage:
+            'linear-gradient(to right, transparent 0%, black 15%), linear-gradient(to bottom, black 75%, transparent 100%)',
+          WebkitMaskImage:
+            'linear-gradient(to right, transparent 0%, black 15%), linear-gradient(to bottom, black 75%, transparent 100%)',
+          maskComposite: 'intersect',
+          WebkitMaskComposite: 'destination-in',
+        }}
+      >
         <SplineScene
           scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
           className="h-full w-full"
