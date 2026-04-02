@@ -5,6 +5,7 @@ import { HowItWorksSection } from '@/components/shared/how-it-works-section';
 import { AboutSection } from '@/components/shared/about-section';
 import { CtaSection } from '@/components/shared/cta-section';
 import { BrowserBanner } from '@/components/shared/browser-banner';
+import { ScrollToTop } from '@/components/shared/scroll-to-top';
 
 export default function HomePage() {
   return (
@@ -16,6 +17,7 @@ export default function HomePage() {
       <AboutSection />
       <CtaSection />
       <BrowserBanner />
+      <ScrollToTop />
     </main>
   );
 }
