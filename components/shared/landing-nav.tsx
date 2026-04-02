@@ -67,7 +67,7 @@ export function LandingNav() {
           >
             <Link
               href="/login"
-              className="absolute right-0 z-0 flex h-8 -translate-x-[40px] cursor-pointer items-center justify-center rounded-full bg-foreground px-2.5 py-2 text-xs font-normal text-background transition-all duration-300 group-hover:-translate-x-[76px] group-hover:bg-foreground/90"
+              className="absolute right-0 z-0 flex h-8 -translate-x-[40px] cursor-pointer items-center justify-center rounded-full bg-foreground px-2.5 py-2 text-xs font-normal text-background transition-all duration-300 group-hover:-translate-x-[76px]"
             >
               <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -80,7 +80,7 @@ export function LandingNav() {
             </Link>
             <Link
               href="/login"
-              className="relative z-10 flex h-8 cursor-pointer items-center rounded-full bg-foreground px-6 py-2 text-xs font-normal text-background transition-all duration-300 hover:bg-foreground/90"
+              className="relative z-10 flex h-8 cursor-pointer items-center rounded-full bg-foreground px-6 py-2 text-xs font-normal text-background transition-all duration-300"
             >
               Sign In
             </Link>

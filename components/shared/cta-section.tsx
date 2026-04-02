@@ -46,7 +46,7 @@ export function CtaSection() {
             >
               <Link
                 href="/signup"
-                className="relative z-10 flex h-14 cursor-pointer items-center rounded-full bg-foreground px-10 font-body text-sm font-semibold text-background transition-all duration-300 hover:bg-foreground/90"
+                className="relative z-10 flex h-14 cursor-pointer items-center rounded-full bg-foreground px-10 font-body text-sm font-semibold text-background transition-all duration-300"
               >
                 Get Started Free
               </Link>

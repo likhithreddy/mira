@@ -16,7 +16,7 @@ export function HeroSection() {
   const handleSplineLoad = useCallback((app: Application) => {
     const bot = app.findObjectByName('Bot');
     if (bot) {
-      const s = window.innerWidth < 768 ? 0.45 : window.innerWidth < 1024 ? 0.6 : 0.75;
+      const s = window.innerWidth < 768 ? 0.3 : window.innerWidth < 1024 ? 0.6 : 0.75;
       bot.scale.x = s;
       bot.scale.y = s;
       bot.scale.z = s;
