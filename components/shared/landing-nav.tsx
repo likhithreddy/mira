@@ -42,12 +42,12 @@ export function LandingNav() {
           whileHover={{ scale: 1.05 }}
           transition={{ type: 'spring', stiffness: 400, damping: 10 }}
         >
-          <a
-            href="#"
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className={`cursor-target text-2xl tracking-tight text-foreground ${syne.className}`}
           >
             MIRA.
-          </a>
+          </button>
         </motion.div>
 
         {/* Center nav links - desktop */}

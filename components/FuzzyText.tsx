@@ -41,7 +41,7 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
   glitchDuration = 200,
   gradient = null,
   letterSpacing = 0,
-  className = ''
+  className = '',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement & { cleanupFuzzyText?: () => void }>(null);
 
@@ -59,7 +59,9 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
       if (!ctx) return;
 
       const computedFontFamily =
-        fontFamily === 'inherit' ? window.getComputedStyle(canvas).fontFamily || 'sans-serif' : fontFamily;
+        fontFamily === 'inherit'
+          ? window.getComputedStyle(canvas).fontFamily || 'sans-serif'
+          : fontFamily;
 
       const fontSizeStr = typeof fontSize === 'number' ? `${fontSize}px` : fontSize;
       const fontString = `${fontWeight} ${fontSizeStr} ${computedFontFamily}`;
@@ -104,11 +106,14 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
 
       const metrics = offCtx.measureText(text);
       const actualLeft = metrics.actualBoundingBoxLeft ?? 0;
-      const actualRight = letterSpacing !== 0 ? totalWidth : (metrics.actualBoundingBoxRight ?? metrics.width);
+      const actualRight =
+        letterSpacing !== 0 ? totalWidth : (metrics.actualBoundingBoxRight ?? metrics.width);
       const actualAscent = metrics.actualBoundingBoxAscent ?? numericFontSize;
       const actualDescent = metrics.actualBoundingBoxDescent ?? numericFontSize * 0.2;
 
-      const textBoundingWidth = Math.ceil(letterSpacing !== 0 ? totalWidth : actualLeft + actualRight);
+      const textBoundingWidth = Math.ceil(
+        letterSpacing !== 0 ? totalWidth : actualLeft + actualRight
+      );
       const tightHeight = Math.ceil(actualAscent + actualDescent);
 
       const extraWidthBuffer = 10;
@@ -226,7 +231,10 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
       animationFrameId = window.requestAnimationFrame(run);
 
       const isInsideTextArea = (x: number, y: number) =>
-        x >= interactiveLeft && x <= interactiveRight && y >= interactiveTop && y <= interactiveBottom;
+        x >= interactiveLeft &&
+        x <= interactiveRight &&
+        y >= interactiveTop &&
+        y <= interactiveBottom;
 
       const handleMouseMove = (e: MouseEvent) => {
         if (!enableHover) return;
@@ -323,7 +331,7 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
     glitchInterval,
     glitchDuration,
     gradient,
-    letterSpacing
+    letterSpacing,
   ]);
 
   return <canvas ref={canvasRef} className={className} />;
