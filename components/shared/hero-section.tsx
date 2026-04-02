@@ -16,7 +16,7 @@ export function HeroSection() {
   const handleSplineLoad = useCallback((app: Application) => {
     const bot = app.findObjectByName('Bot');
     if (bot) {
-      const s = 0.75;
+      const s = window.innerWidth < 768 ? 0.45 : window.innerWidth < 1024 ? 0.6 : 0.75;
       bot.scale.x = s;
       bot.scale.y = s;
       bot.scale.z = s;
@@ -27,12 +27,19 @@ export function HeroSection() {
     <section
       data-testid="hero-section"
       className="relative h-screen w-full overflow-hidden bg-background"
+      onContextMenu={(e) => e.preventDefault()}
     >
       {/* Spotlight - light mode only */}
       <Spotlight className="-top-40 left-0 dark:hidden md:-top-20 md:left-60" fill="black" />
 
-      {/* Spline 3D — container spans full viewport for mouse tracking */}
-      <div className="spline-watermark-hidden absolute inset-x-0 -bottom-[15%] top-0 z-10 hidden lg:block">
+      {/* Spline 3D — container spans full viewport for mouse/touch tracking */}
+      <div
+        className="spline-watermark-hidden absolute inset-x-0 -bottom-[15%] top-0 z-10"
+        style={{
+          maskImage: 'linear-gradient(to bottom, black 65%, transparent 85%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 85%)',
+        }}
+      >
         <SplineScene
           scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
           className="h-full w-full"
@@ -40,17 +47,20 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Layer 3: Tagline — above the robot */}
+      {/* Tagline — above the robot */}
       <motion.div
-        className="pointer-events-none relative z-20 flex flex-col items-center pt-24 text-center"
+        className="pointer-events-none relative z-20 flex flex-col items-center px-4 pt-20 text-center sm:px-6 md:pt-24"
         variants={heroVariants}
         initial="initial"
         animate="animate"
       >
         {/* Tagline */}
-        <div className="flex items-center justify-center font-body text-lg font-light text-muted-foreground md:text-xl lg:text-2xl">
+        <div className="flex items-center justify-center font-body text-sm font-light text-muted-foreground sm:text-lg md:text-xl lg:text-2xl">
           <LayoutGroup>
-            <motion.div className="flex whitespace-pre" layout>
+            <motion.div
+              className="flex flex-wrap justify-center whitespace-pre sm:flex-nowrap"
+              layout
+            >
               <motion.span
                 className="pt-0.5 md:pt-1"
                 layout
