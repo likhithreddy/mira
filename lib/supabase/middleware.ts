@@ -79,9 +79,7 @@ export async function createMiddlewareClient(
           return request.cookies.getAll();
         },
         setAll(cookiesToSet: CookieToSet[]) {
-          cookiesToSet.forEach(({ name, value }: CookieToSet) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value }: CookieToSet) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({
             request,
           });
