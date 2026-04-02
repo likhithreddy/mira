@@ -39,7 +39,7 @@ function isUserProtectedRoute(pathname: string): boolean {
  */
 function isAdminRoute(pathname: string): boolean {
   return (
-    (pathname === '/admin' || pathname.startsWith('/admin/')) &&
+    (pathname === ADMIN_PREFIX || pathname.startsWith(ADMIN_PREFIX + '/')) &&
     !pathname.startsWith(ADMIN_API_PREFIX)
   );
 }
