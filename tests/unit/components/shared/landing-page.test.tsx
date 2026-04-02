@@ -47,8 +47,9 @@ describe('Landing Page', () => {
 
   it('renders the hero headline', () => {
     render(<HomePage />);
-    const heading = screen.getByRole('heading', { level: 1, name: 'MIRA' });
-    expect(heading).toBeInTheDocument();
+    const hero = screen.getByTestId('hero-section');
+    expect(hero).toBeInTheDocument();
+    expect(screen.getByText(/your ai coach to/i)).toBeInTheDocument();
   });
 
   it('renders single-column layout at 375px without horizontal overflow', () => {
