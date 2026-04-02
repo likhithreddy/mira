@@ -38,7 +38,10 @@ function isUserProtectedRoute(pathname: string): boolean {
  * Check if the path is an admin page route
  */
 function isAdminRoute(pathname: string): boolean {
-  return pathname.startsWith(ADMIN_PREFIX) && !pathname.startsWith(ADMIN_API_PREFIX);
+  return (
+    (pathname === '/admin' || pathname.startsWith('/admin/')) &&
+    !pathname.startsWith(ADMIN_API_PREFIX)
+  );
 }
 
 /**
