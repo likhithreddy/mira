@@ -39,9 +39,9 @@ export function LandingNav() {
           whileHover={{ scale: 1.05 }}
           transition={{ type: 'spring', stiffness: 400, damping: 10 }}
         >
-          <Link href="/" className="font-heading text-2xl font-bold tracking-tight text-foreground">
+          <a href="#" className="font-heading text-2xl font-bold tracking-tight text-foreground">
             MIRA
-          </Link>
+          </a>
         </motion.div>
 
         {/* Center nav links - desktop */}
