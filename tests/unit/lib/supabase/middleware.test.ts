@@ -310,5 +310,65 @@ describe('lib/supabase/middleware', () => {
       expect(result.response).toBeDefined();
       expect(result.response.cookies).toBeDefined();
     });
+
+    it('returns null user and profile when SUPABASE_URL is missing', async () => {
+      // Remove Supabase URL
+      delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const result = await createMiddlewareClient(request);
+
+      expect(result.user).toBeNull();
+      expect(result.profile).toBeNull();
+      expect(result.response).toBeDefined();
+    });
+
+    it('returns null user and profile when SUPABASE_ANON_KEY is missing', async () => {
+      // Remove Supabase anon key
+      delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const result = await createMiddlewareClient(request);
+
+      expect(result.user).toBeNull();
+      expect(result.profile).toBeNull();
+      expect(result.response).toBeDefined();
+    });
+  });
+
+  describe('updateSession with missing credentials', () => {
+    it('returns response without calling Supabase when URL is missing', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+
+      // Remove Supabase URL
+      delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+      const { updateSession } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const response = await updateSession(request);
+
+      expect(response).toBeDefined();
+      expect(createServerClient).not.toHaveBeenCalled();
+    });
+
+    it('returns response without calling Supabase when anon key is missing', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+
+      // Remove Supabase anon key
+      delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+      const { updateSession } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const response = await updateSession(request);
+
+      expect(response).toBeDefined();
+      expect(createServerClient).not.toHaveBeenCalled();
+    });
   });
 });
