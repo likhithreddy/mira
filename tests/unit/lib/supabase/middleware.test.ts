@@ -181,4 +181,194 @@ describe('lib/supabase/middleware', () => {
     const cookies = cookiesConfig.getAll();
     expect(cookies).toEqual([{ name: 'sb-access-token', value: 'existing-token' }]);
   });
+
+  describe('createMiddlewareClient', () => {
+    it('returns user and profile when authenticated', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+      const mockGetUser = vi.fn().mockResolvedValue({
+        data: { user: { id: 'user-123', email: 'test@example.com' } },
+        error: null,
+      });
+      const mockSingle = vi.fn().mockResolvedValue({
+        data: { role: 'user', is_suspended: false },
+        error: null,
+      });
+      const mockEq = vi.fn().mockReturnValue({ single: mockSingle });
+      const mockSelect = vi.fn().mockReturnValue({ eq: mockEq });
+      const mockFrom = vi.fn().mockReturnValue({ select: mockSelect });
+
+      (createServerClient as ReturnType<typeof vi.fn>).mockReturnValue({
+        auth: { getUser: mockGetUser },
+        from: mockFrom,
+      });
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const result = await createMiddlewareClient(request);
+
+      expect(result.user).toEqual({ id: 'user-123', email: 'test@example.com' });
+      expect(result.profile).toEqual({ role: 'user', is_suspended: false });
+      expect(result.response).toBeDefined();
+    });
+
+    it('returns null user and profile when not authenticated', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+      const mockGetUser = vi.fn().mockResolvedValue({
+        data: { user: null },
+        error: null,
+      });
+
+      (createServerClient as ReturnType<typeof vi.fn>).mockReturnValue({
+        auth: { getUser: mockGetUser },
+      });
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const result = await createMiddlewareClient(request);
+
+      expect(result.user).toBeNull();
+      expect(result.profile).toBeNull();
+      expect(result.response).toBeDefined();
+    });
+
+    it('returns null profile when profile fetch fails', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+      const mockGetUser = vi.fn().mockResolvedValue({
+        data: { user: { id: 'user-123', email: 'test@example.com' } },
+        error: null,
+      });
+      const mockSingle = vi.fn().mockResolvedValue({
+        data: null,
+        error: { message: 'Not found' },
+      });
+      const mockEq = vi.fn().mockReturnValue({ single: mockSingle });
+      const mockSelect = vi.fn().mockReturnValue({ eq: mockEq });
+      const mockFrom = vi.fn().mockReturnValue({ select: mockSelect });
+
+      (createServerClient as ReturnType<typeof vi.fn>).mockReturnValue({
+        auth: { getUser: mockGetUser },
+        from: mockFrom,
+      });
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const result = await createMiddlewareClient(request);
+
+      expect(result.user).toEqual({ id: 'user-123', email: 'test@example.com' });
+      expect(result.profile).toBeNull();
+      expect(result.response).toBeDefined();
+    });
+
+    it('queries profiles table with user id', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+      const mockGetUser = vi.fn().mockResolvedValue({
+        data: { user: { id: 'user-456', email: 'another@example.com' } },
+        error: null,
+      });
+      const mockSingle = vi.fn().mockResolvedValue({
+        data: { role: 'admin', is_suspended: false },
+        error: null,
+      });
+      const mockEq = vi.fn().mockReturnValue({ single: mockSingle });
+      const mockSelect = vi.fn().mockReturnValue({ eq: mockEq });
+      const mockFrom = vi.fn().mockReturnValue({ select: mockSelect });
+
+      (createServerClient as ReturnType<typeof vi.fn>).mockReturnValue({
+        auth: { getUser: mockGetUser },
+        from: mockFrom,
+      });
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      await createMiddlewareClient(request);
+
+      expect(mockFrom).toHaveBeenCalledWith('profiles');
+      expect(mockSelect).toHaveBeenCalledWith('role, is_suspended');
+      expect(mockEq).toHaveBeenCalledWith('id', 'user-456');
+    });
+
+    it('returns response with cookies', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+      const mockGetUser = vi.fn().mockResolvedValue({
+        data: { user: null },
+        error: null,
+      });
+
+      (createServerClient as ReturnType<typeof vi.fn>).mockReturnValue({
+        auth: { getUser: mockGetUser },
+      });
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const result = await createMiddlewareClient(request);
+
+      expect(result.response).toBeDefined();
+      expect(result.response.cookies).toBeDefined();
+    });
+
+    it('returns null user and profile when SUPABASE_URL is missing', async () => {
+      // Remove Supabase URL
+      delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const result = await createMiddlewareClient(request);
+
+      expect(result.user).toBeNull();
+      expect(result.profile).toBeNull();
+      expect(result.response).toBeDefined();
+    });
+
+    it('returns null user and profile when SUPABASE_ANON_KEY is missing', async () => {
+      // Remove Supabase anon key
+      delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+      const { createMiddlewareClient } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const result = await createMiddlewareClient(request);
+
+      expect(result.user).toBeNull();
+      expect(result.profile).toBeNull();
+      expect(result.response).toBeDefined();
+    });
+  });
+
+  describe('updateSession with missing credentials', () => {
+    it('returns response without calling Supabase when URL is missing', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+
+      // Remove Supabase URL
+      delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+      const { updateSession } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const response = await updateSession(request);
+
+      expect(response).toBeDefined();
+      expect(createServerClient).not.toHaveBeenCalled();
+    });
+
+    it('returns response without calling Supabase when anon key is missing', async () => {
+      const { createServerClient } = await import('@supabase/ssr');
+
+      // Remove Supabase anon key
+      delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+      const { updateSession } = await import('@/lib/supabase/middleware');
+
+      const request = await createMockRequest();
+      const response = await updateSession(request);
+
+      expect(response).toBeDefined();
+      expect(createServerClient).not.toHaveBeenCalled();
+    });
+  });
 });
