@@ -41,7 +41,7 @@ export function CtaSection() {
 
           <div className="flex justify-center">
             <div
-              className="group relative inline-flex items-center"
+              className="cursor-target group relative inline-flex items-center"
               style={{ filter: 'url(#gooey-filter-cta)' }}
             >
               <Link

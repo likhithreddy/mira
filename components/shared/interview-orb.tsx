@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 export function InterviewOrb() {
   return (
     <motion.div
-      className="absolute bottom-8 right-6 z-30 flex flex-col items-center gap-2 sm:bottom-12 sm:right-10 md:bottom-16 md:right-16"
+      className="cursor-target absolute bottom-8 right-6 z-30 flex flex-col items-center gap-2 sm:bottom-12 sm:right-10 md:bottom-16 md:right-16"
       whileHover={{ scale: 2 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >

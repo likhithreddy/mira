@@ -23,7 +23,7 @@ export function ScrollToTop() {
     <AnimatePresence>
       {visible && (
         <motion.button
-          className="fixed bottom-8 right-6 z-40 sm:bottom-12 sm:right-10 md:bottom-16 md:right-16"
+          className="cursor-target fixed bottom-8 right-6 z-40 sm:bottom-12 sm:right-10 md:bottom-16 md:right-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}

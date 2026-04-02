@@ -92,7 +92,7 @@ export function AboutSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 + index * 0.1 }}
-                  className="flex flex-col items-center gap-4 rounded-2xl border border-border/50 bg-card p-6 text-center"
+                  className="cursor-target flex flex-col items-center gap-4 rounded-2xl border border-border/50 bg-card p-6 text-center"
                 >
                   <Avatar className="h-20 w-20 border-2 border-border/50">
                     <AvatarFallback className="bg-foreground font-heading text-xl font-bold text-background">

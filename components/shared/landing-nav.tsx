@@ -39,7 +39,10 @@ export function LandingNav() {
           whileHover={{ scale: 1.05 }}
           transition={{ type: 'spring', stiffness: 400, damping: 10 }}
         >
-          <a href="#" className="font-heading text-2xl font-bold tracking-tight text-foreground">
+          <a
+            href="#"
+            className="cursor-target font-heading text-2xl font-bold tracking-tight text-foreground"
+          >
             MIRA
           </a>
         </motion.div>
@@ -50,7 +53,7 @@ export function LandingNav() {
             <a
               key={link.label}
               href={link.href}
-              className="rounded-full px-3 py-2 text-xs font-light text-foreground/80 transition-all duration-200 hover:bg-foreground/10 hover:text-foreground"
+              className="cursor-target rounded-full px-3 py-2 text-xs font-light text-foreground/80 transition-all duration-200 hover:bg-foreground/10 hover:text-foreground"
             >
               {link.label}
             </a>
@@ -59,10 +62,10 @@ export function LandingNav() {
 
         {/* Right zone: theme toggle + gooey sign in - desktop */}
         <div className="pointer-events-auto hidden items-center md:flex">
-          <AnimatedThemeToggler className="mr-6 cursor-pointer text-foreground/70 transition-colors hover:text-foreground" />
+          <AnimatedThemeToggler className="cursor-target mr-6 cursor-pointer text-foreground/70 transition-colors hover:text-foreground" />
 
           <div
-            className="group relative flex items-center"
+            className="cursor-target group relative flex items-center"
             style={{ filter: 'url(#gooey-filter)' }}
           >
             <Link

@@ -76,7 +76,7 @@ export function HeroSection() {
                   'speak clearly',
                   'land your role',
                 ]}
-                mainClassName="text-background px-2 md:px-3 bg-foreground overflow-hidden py-0.5 md:py-1 justify-center rounded-lg"
+                mainClassName="cursor-target text-background px-2 md:px-3 bg-foreground overflow-hidden py-0.5 md:py-1 justify-center rounded-lg"
                 staggerFrom="last"
                 initial={{ y: '100%' }}
                 animate={{ y: 0 }}

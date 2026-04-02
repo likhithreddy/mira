@@ -81,7 +81,7 @@ export function FeaturesSection() {
         >
           {features.map((feature) => (
             <motion.div key={feature.title} variants={item}>
-              <Card className="group h-full border-border/50 bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg">
+              <Card className="cursor-target group h-full border-border/50 bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg">
                 <CardHeader className="p-6">
                   <feature.icon className="mb-4 h-8 w-8 text-foreground/60 transition-colors duration-300 group-hover:text-foreground" />
                   <CardTitle className="mb-2 font-heading text-xl text-foreground">
@@ -104,7 +104,7 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.4, ease: 'easeOut', delay: 0.3 }}
         >
-          <Card className="group border-border/50 bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg">
+          <Card className="cursor-target group border-border/50 bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg">
             <CardHeader className="p-6 sm:p-8 md:flex-row md:items-start md:gap-8">
               <signatureFeature.icon className="mb-4 h-10 w-10 shrink-0 text-foreground/60 transition-colors duration-300 group-hover:text-foreground md:mb-0 md:mt-1" />
               <div>
