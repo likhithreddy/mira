@@ -99,7 +99,7 @@ export function HowItWorksSection() {
                 </div>
 
                 {/* Decorative number */}
-                <span className="mb-2 font-heading text-7xl font-bold leading-none text-foreground/5 lg:mx-auto lg:text-8xl">
+                <span className="mb-2 font-heading text-7xl font-bold leading-none text-foreground/10 dark:text-foreground/[0.12] lg:mx-auto lg:text-8xl">
                   {step.number}
                 </span>
 

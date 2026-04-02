@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Syne } from 'next/font/google';
 import { motion } from 'framer-motion';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
+
+const syne = Syne({ subsets: ['latin'], weight: '800' });
 
 const navLinks = [
   { label: 'Features', href: '#features' },
@@ -41,9 +44,9 @@ export function LandingNav() {
         >
           <a
             href="#"
-            className="cursor-target font-heading text-2xl font-bold tracking-tight text-foreground"
+            className={`cursor-target text-2xl tracking-tight text-foreground ${syne.className}`}
           >
-            MIRA
+            MIRA.
           </a>
         </motion.div>
 
@@ -100,7 +103,7 @@ export function LandingNav() {
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>
-                <SheetTitle className="font-heading text-xl">MIRA</SheetTitle>
+                <SheetTitle className={`text-xl ${syne.className}`}>MIRA.</SheetTitle>
               </SheetHeader>
               <div className="mt-8 flex flex-col gap-4">
                 {navLinks.map((link) => (

@@ -112,7 +112,7 @@ describe('NotFound (404 Page)', () => {
   it('renders the LandingNav', () => {
     render(<NotFound />);
     // LandingNav renders the MIRA logo
-    expect(screen.getByText('MIRA')).toBeInTheDocument();
+    expect(screen.getByText('MIRA.')).toBeInTheDocument();
   });
 
   it('sets up MutationObserver for dark mode detection', () => {

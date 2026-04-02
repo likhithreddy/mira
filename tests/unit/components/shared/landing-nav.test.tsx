@@ -27,7 +27,7 @@ describe('LandingNav', () => {
 
   it('renders the MIRA logo', () => {
     render(<LandingNav />);
-    expect(screen.getByText('MIRA')).toBeInTheDocument();
+    expect(screen.getByText('MIRA.')).toBeInTheDocument();
   });
 
   it('renders all three nav links on desktop', () => {
@@ -66,7 +66,7 @@ describe('LandingNav', () => {
 
   it('has cursor-target on the logo', () => {
     render(<LandingNav />);
-    const logo = screen.getByText('MIRA');
+    const logo = screen.getByText('MIRA.');
     expect(logo).toHaveClass('cursor-target');
   });
 
