@@ -95,9 +95,15 @@ describe('LandingNav', () => {
     expect(transparentDiv).toBeInTheDocument();
   });
 
-  it('renders the mobile hamburger menu button', () => {
+  it('scrolls to top when logo button is clicked', () => {
+    const scrollToMock = vi.fn();
+    global.scrollTo = scrollToMock;
+
     render(<LandingNav />);
-    const menuButton = screen.getByLabelText('Open menu');
-    expect(menuButton).toBeInTheDocument();
+    const logoButton = screen.getByText('MIRA.');
+
+    fireEvent.click(logoButton);
+
+    expect(scrollToMock).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 });
