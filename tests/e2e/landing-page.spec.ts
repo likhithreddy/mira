@@ -51,11 +51,8 @@ test.describe('Landing Page - Issue #8', () => {
   });
 
   test('dark/light theme toggle works', async ({ page }) => {
-    // Check initial theme
-    const html = page.locator('html');
-    const initialClass = await html.getAttribute('class');
-
     // Find and click theme toggle
+    const html = page.locator('html');
     const themeToggle = page
       .locator('button')
       .filter({ hasText: /theme/i })
