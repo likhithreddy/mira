@@ -41,6 +41,7 @@ export default function NotFound() {
       <div className="relative z-10 flex flex-col items-center px-4 text-center">
         {/* Cat Lottie animation */}
         <motion.div
+          data-testid="cat-animation"
           className="h-48 w-48 shrink-0 sm:h-56 sm:w-56 md:h-64 md:w-64"
           initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
