@@ -395,7 +395,7 @@ const TargetCursor = ({
   }
 
   return (
-    <div ref={cursorRef} className="target-cursor-wrapper">
+    <div ref={cursorRef} className="target-cursor-wrapper" data-testid="target-cursor">
       <div ref={dotRef} className="target-cursor-dot" />
       <div className="target-cursor-corner corner-tl" />
       <div className="target-cursor-corner corner-tr" />

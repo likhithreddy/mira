@@ -34,6 +34,7 @@ export function ScrollToTop() {
           whileHover={{ scale: 1.25 }}
           onClick={scrollToTop}
           aria-label="Scroll to top"
+          data-testid="scroll-to-top-button"
         >
           <div className="relative flex h-16 w-16 items-center justify-center sm:h-20 sm:w-20">
             {/* Outer ring */}

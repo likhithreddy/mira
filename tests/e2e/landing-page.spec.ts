@@ -80,11 +80,6 @@ test.describe('Landing Page - Issue #8', () => {
     await page.waitForTimeout(200);
 
     const scrollY = await page.evaluate(() => window.scrollY);
-    // If scroll failed, skip the click test (viewport might be too tall)
-    if (scrollY <= 0) {
-      test.skip(true, 'Page too tall to scroll, skipping scroll test');
-      return;
-    }
     expect(scrollY).toBeGreaterThan(0);
 
     // Click logo
@@ -116,23 +111,15 @@ test.describe('Landing Page - Issue #8', () => {
   });
 
   test('scroll to top button appears after scrolling', async ({ page }) => {
-    const scrollButton = page
-      .locator('button')
-      .filter({ hasText: /↑|arrow/i })
-      .or(page.locator('[data-testid="scroll-to-top"]'));
-
-    // Scroll down first to ensure content loads
-    await page.evaluate(() => window.scrollTo({ top: 800, behavior: 'instant' }));
+    // Scroll to top button appears after scrolling past one viewport
+    await page.evaluate(() => {
+      window.scrollTo({ top: window.innerHeight + 500, behavior: 'instant' });
+    });
     await page.waitForTimeout(500);
 
-    // Check if button exists (it may or may not be visible depending on page height)
-    const hasButton = await scrollButton.count();
-    if (hasButton > 0) {
-      await expect(scrollButton.first()).toBeVisible();
-    } else {
-      // If button doesn't exist, page may be too short
-      test.skip(true, 'Scroll to top button not found - page may be too short');
-    }
+    // Button has aria-label="Scroll to top" for reliable selection
+    const scrollButton = page.locator('button[aria-label="Scroll to top"]');
+    await expect(scrollButton).toBeVisible();
   });
 
   test('tagline pill is visible and interactive', async ({ page }) => {
@@ -198,19 +185,19 @@ test.describe('Landing Page - Responsive', () => {
 
 test.describe('TargetCursor - Desktop vs Mobile', () => {
   test('shows on desktop (Chrome)', async ({ page }) => {
+    // Ensure desktop viewport (TargetCursor only renders on non-mobile)
+    await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/');
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
 
-    // TargetCursor should be present on desktop (with sufficient wait for hydration)
+    // Wait for TargetCursor to hydrate and render (GSAP animations need time)
+    await page.waitForTimeout(3000);
+
+    // TargetCursor renders .target-cursor-wrapper, not .target-cursor
     const hasCursor = await page.evaluate(() => {
-      return document.querySelector('.target-cursor') !== null;
+      return document.querySelector('.target-cursor-wrapper') !== null;
     });
-    // On desktop with sufficient screen, cursor should exist
-    // Note: This test is skipped for browsers where the cursor doesn't load reliably
-    if (!hasCursor) {
-      test.skip(true, 'TargetCursor not loaded - may be a browser-specific loading issue');
-    }
+    expect(hasCursor).toBe(true);
   });
 
   test('hides on mobile/small screens', async ({ page }) => {
