@@ -8,6 +8,7 @@ const TargetCursor = ({
   hideDefaultCursor = true,
   hoverDuration = 0.2,
   parallaxOn = true,
+  hoverMargin = 4,
 }) => {
   const cursorRef = useRef(null);
   const cornersRef = useRef(null);
@@ -18,6 +19,7 @@ const TargetCursor = ({
   const targetCornerPositionsRef = useRef(null);
   const tickerFnRef = useRef(null);
   const activeStrengthRef = useRef(0);
+  const lastBoundsRef = useRef(null);
 
   const isMobile = useMemo(() => {
     if (typeof window === 'undefined') return false;
@@ -46,6 +48,54 @@ const TargetCursor = ({
       ease: 'power3.out',
     });
   }, []);
+
+  // Helper to detect if bounds have changed (catches Framer Motion scale transforms)
+  const hasBoundsChanged = (rect1, rect2) => {
+    if (!rect1 || !rect2) return true;
+    return (
+      rect1.left !== rect2.left ||
+      rect1.top !== rect2.top ||
+      rect1.right !== rect2.right ||
+      rect1.bottom !== rect2.bottom
+    );
+  };
+
+  // Smart element detection: finds the actual visual element, not just wrapper
+  const getVisualTarget = (element) => {
+    if (!element) return null;
+
+    // If element has cursor-target but only one child, check if child is the visual target
+    if (element.classList.contains('cursor-target') && element.children.length === 1) {
+      const child = element.children[0];
+
+      // Check if child has visual styling (background, padding, border)
+      const styles = window.getComputedStyle(child);
+      const bgColor = styles.backgroundColor;
+      const hasBackground =
+        bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent' && bgColor !== '#00000000';
+      const hasPadding =
+        parseInt(styles.paddingTop, 10) > 0 ||
+        parseInt(styles.paddingLeft, 10) > 0 ||
+        parseInt(styles.paddingRight, 10) > 0 ||
+        parseInt(styles.paddingBottom, 10) > 0;
+
+      // If child is visually styled, it's the actual target (e.g., black pill)
+      if (hasBackground || hasPadding) {
+        return child;
+      }
+    }
+
+    // Otherwise, walk up to find cursor-target parent
+    let current = element;
+    while (current && current !== document.body) {
+      if (current.matches(targetSelector)) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+
+    return null;
+  };
 
   useEffect(() => {
     if (isMobile || !cursorRef.current) return;
@@ -88,8 +138,27 @@ const TargetCursor = ({
     createSpinTimeline();
 
     const tickerFn = () => {
-      if (!targetCornerPositionsRef.current || !cursorRef.current || !cornersRef.current) {
+      if (!activeTarget || !cursorRef.current || !cornersRef.current) {
         return;
+      }
+
+      // Poll bounds every frame to catch Framer Motion scale transforms
+      const currentRect = activeTarget.getBoundingClientRect();
+      if (hasBoundsChanged(currentRect, lastBoundsRef.current)) {
+        const { borderWidth, cornerSize } = constants;
+        const margin = borderWidth + hoverMargin;
+
+        targetCornerPositionsRef.current = [
+          { x: currentRect.left - margin, y: currentRect.top - margin },
+          { x: currentRect.right + margin - cornerSize, y: currentRect.top - margin },
+          {
+            x: currentRect.right + margin - cornerSize,
+            y: currentRect.bottom + margin - cornerSize,
+          },
+          { x: currentRect.left - margin, y: currentRect.bottom + margin - cornerSize },
+        ];
+
+        lastBoundsRef.current = currentRect;
       }
 
       const strength = activeStrengthRef.current;
@@ -159,16 +228,7 @@ const TargetCursor = ({
     window.addEventListener('mouseup', mouseUpHandler);
 
     const enterHandler = (e) => {
-      const directTarget = e.target;
-      const allTargets = [];
-      let current = directTarget;
-      while (current && current !== document.body) {
-        if (current.matches(targetSelector)) {
-          allTargets.push(current);
-        }
-        current = current.parentElement;
-      }
-      const target = allTargets[0] || null;
+      const target = getVisualTarget(e.target);
       if (!target || !cursorRef.current || !cornersRef.current) return;
       if (activeTarget === target) return;
       if (activeTarget) {
@@ -192,12 +252,17 @@ const TargetCursor = ({
       const cursorX = gsap.getProperty(cursorRef.current, 'x');
       const cursorY = gsap.getProperty(cursorRef.current, 'y');
 
+      // Add hoverMargin to create spacing between cursor border and element
+      const margin = borderWidth + hoverMargin;
       targetCornerPositionsRef.current = [
-        { x: rect.left - borderWidth, y: rect.top - borderWidth },
-        { x: rect.right + borderWidth - cornerSize, y: rect.top - borderWidth },
-        { x: rect.right + borderWidth - cornerSize, y: rect.bottom + borderWidth - cornerSize },
-        { x: rect.left - borderWidth, y: rect.bottom + borderWidth - cornerSize },
+        { x: rect.left - margin, y: rect.top - margin },
+        { x: rect.right + margin - cornerSize, y: rect.top - margin },
+        { x: rect.right + margin - cornerSize, y: rect.bottom + margin - cornerSize },
+        { x: rect.left - margin, y: rect.bottom + margin - cornerSize },
       ];
+
+      // Store initial bounds for change detection
+      lastBoundsRef.current = rect;
 
       isActiveRef.current = true;
       gsap.ticker.add(tickerFnRef.current);
@@ -222,6 +287,7 @@ const TargetCursor = ({
 
         isActiveRef.current = false;
         targetCornerPositionsRef.current = null;
+        lastBoundsRef.current = null;
         gsap.set(activeStrengthRef, { current: 0, overwrite: true });
         activeTarget = null;
 
@@ -299,6 +365,7 @@ const TargetCursor = ({
 
       isActiveRef.current = false;
       targetCornerPositionsRef.current = null;
+      lastBoundsRef.current = null;
       activeStrengthRef.current = 0;
     };
   }, [
@@ -310,6 +377,7 @@ const TargetCursor = ({
     isMobile,
     hoverDuration,
     parallaxOn,
+    hoverMargin,
   ]);
 
   useEffect(() => {

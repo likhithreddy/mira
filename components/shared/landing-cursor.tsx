@@ -7,5 +7,13 @@ const TargetCursor = dynamic(() => import('@/components/TargetCursor'), {
 });
 
 export function LandingCursor() {
-  return <TargetCursor spinDuration={2} hideDefaultCursor parallaxOn hoverDuration={0.2} />;
+  return (
+    <TargetCursor
+      spinDuration={2}
+      hideDefaultCursor
+      parallaxOn
+      hoverDuration={0.2}
+      hoverMargin={4}
+    />
+  );
 }
